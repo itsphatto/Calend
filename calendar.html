@@ -1,141 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"> 
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calend</title>
 <link rel="stylesheet" href="style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACmElEQVR4nG2TP28cZRCHn5n33b29f5YTE9tKlUCDKBBlRJBODhVQAfJXMAKRCop0EZ2FlDSRguSvcKJMJBoiS1FqGlKkcSrknB2w7nzLenffGYqzjYMYaTRTzGh+M5pHANwRERzg1fbmR52MLTNGrdtVgCj6hyq7J87O2vfjpxd75CzZuzsqloZv3QuiW1nQeNIabTIAYlA6UWmStcltZzo7/O76D7uVOyK+uRlevtfLhv3jxyv9YuNgVrmIm5moCHI6zVXd3EWvDAt5Pa+ezOaDT689LxuV8Th1u9P7K4NiY1KWdROQ0jVox8UzxzNHOy6la2gCMinLemVQbHS70/syHifZ3/78Rh7Cswaz/nEIvx302EuRzf6cqQsAS+KM532uh5YPrpTMByllqNYpfRhV9HYRo9R2QnMYeXtPudoxmrYgY2ENcDMa3TrQSMSXWgqN0pjfjuCjyhwpK00f36L37Sf0q2MqBFkIoHW4jJGyPunFL8jvj7Xq5Qg+ig7rrTliJlxahnff4eToL5omoUEBMHNahTb2KA6WEXNpzXFYj5yZCN4m/j6cEtoKdUHTqQR3gjh4hrSJ09MAoAL7UQV3dwBXAXnTHfCzCLi7RxUE9hVkt8gCgCGCJcPcz2Myoz/okecZ3UEXWRzGiizgyK6a24OqSa4CuJEXHWKM5EVOzDOyPCOZ4Q5uixoVqJrk7vZAAPa3v3y4Nsy/njR5rYNLOZ6AC4sutsNF8flRvZrV+atZ/dP6nZ+/OX/lpX756HIv3JocHTtgcOGVwXE3QFeXB/JnmX6dznufXXteNucwPbk7Kt4frt4Lqlt50Fg1idZOYVKlyAJ1sjaZ7Uxnk39h+i/Or3/84mbQ8JX5/+DcsLN2502c/wFtaWv7ahUxNwAAAABJRU5ErkJggg==">
 <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,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">
 <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAmmElEQVR4nO2de5wcV3Xnf+fcW9WPeWlkPfy2QoJJLNtkgSQEDCNDEsSyASzRYxaHDyEEm2QBh4AfwoRSO4Ats+YR9pPEDovXLBgyhWTBBjB87EiyeeQBCQRLDg5+YMe2NJI1o3l0d1Xde8/+Ud3SSJZmeqTpme6Z+n7cGqtVc7qq7q9PnXvuufcSMgAAAhCCgICdjLWrhAZDe7zjRm8tLY+q8bnk6bOJ5BwRWgORs4h4pYhbTkS9TtADoECEPCBKQBoACGIAWBHUAKqCMA6RMSY+KOL2g+gpInlchJ7Uzj054esnz31/ePC45ztUUtg9TMA6h3JZCJDW3Z3OgRb6BBYSERDCEgPAsQKWIOD9xZ/8Iph+CVZexEwvcE7OB2GNCC3LeyqnOb19RIATwInAOUl/CiAQ1P9Lj6v/QSAwAUwEZkp/EiD1A41ziIyrAXJIhJ5SLD8VoYfB8kOP1UN9Yxc8SuWyO+p8h0oKAFAKHdHSFfeSE3QQBLwOO3kd1rmpopCg5I/0ml+xll5GQpdYwUuIZE13zvO1YgBAYhwS62CcwIlzAmCKDtN7KUSNu0onuL+HNS4ASKRhg9K3KBU8sWaCVgxfMYgAYwUTURI5kcc10w+E8E+O8MDwOO++sBzGR64l4J3YyTuxzpWPEf5iZ0kIWgDCUImx+wKZKuKJT1x2RuT0K8m51xiRVzDxL3XnNUiAyDrExsGJswBJake4IdgTiXUOz1mOCJ5c/fNJEStfM3I6/ZKN1wysk//wFD0gTu7NeW5n95/e/cxhO0HAWLuHlornXtSCbniqS8u7TOO9AzdfdrYjtZ5JfhegVxZ9tUwxoZY4RMZCRCwRiUAYIGq1cGdLPYgRAjkRISJSOa2Q9xjWCSqJHWGR7wnw1Zrjb511ffhE43d3BAP62CfTYqOtGmuOIDnGG+/f8voeJn89iP67iHtVT97rcwJUYoPEOsdETiBMIF7okz8ZBOIaAteKVdFTICZMRmYcgvsg7suSL3xzxdVfHAOOeG0aDB0WWWdy0Qi6EVZM7dwdvLV0ERx+j0guz2l1HhNhMjYw1tWPIT4S8S4OJO2JOgBQzKorpwEIaon9OQmHQvau/g9s/dfG8TuCAb2uvMsulixJxzfmsUKWIOCR7odeZ8X8EUC/05f3VSU2qBnr0kZbfCI+EWkcnoo7p5Uq+hpjtdiJ4NuA3LbjB+r/DYb1+zZUUhgMXacLu6MbVoZKqiHkJ24tFYoWlzPLH/tK/RoTMBEZCGAojYc7MpyYO8QJyBGge/Ia1gGxdT80Bn9V83DXue8Pq8DR97QT6UhBT73pO4KB/MU9K3+PHL2vmFMXJNahkhgHgRARo0OvsYWIiDgQqOhp9hSjmtg9juQvJkGfbwh7qFRSDe/dSXRUY0sQpIMgaWeP9t+y8QrNfE3BUxfHxqGaGAsCdWrnbr4RiINACp5WOY9Ric1uI7RlxTXhFwiQY+53R9Axgp7qlQ/cXPptVvhwwVeXJNahGmdCPhWmCtvTjFpsv2Pg/mzlNVt3AofvfUdkRNpe0BIEzOWyEwD7Pva7v+R7+c2scIUmxkSUZEKeQxrC7sp5yjgHAP83inDj6g+GPwPStmh3b93OgiapZy+CAPye7o1Xe8Qfzntq2WjaUwdTJuRW4EQcAbSs4FM1saPWykfu+wF9ajAMbbtnQ9pS0BIE3Kgge3rLxpfkmD7RnfNeMRElSKyzTKQW+hyXAk7EeopVd87DZJR810Hev+Karf8ItK+3bjtB7wgG9KXlXSYIAn5314MBE23Ke8obryWWllAOuV0QgYBgu32tI2uNOPrYv319+M8v3bXLNNpqoc9xKm0jDgEoLJV4MAzt/i2lFzDjtp6cGjhUTeDS+orMKy8gImKZSPUVfUxU4+/UEr7qzBvCPUOlkiqF7ROCtIWgpz6+nrl5wztyWt2a19w3HhkDQLVbgdBSpV72antyWteMHTeG3rfq+vB/A+0Tgiy4UBqPrceCgXxf94pPFX3vqsm0aCiLldsUJ2I9ZlXMaUzG5m8qT9PV534yrLZDCLKggm7cgJ/ftOF5vR5/vivnvXxkMrJLqd6iU2kUQfUXc2oijr+fOPvW1dduf2ShRb1gopFgQFN5l3nqY2/8na6cf6ev6PTxKDFUn3+X0RkIxPTkPB1ZNxxHyVtXf3D7txttuxDnM+95XAFoqFRSVN5lhm/e8I7unPd1iJw+lmYxMjF3GATSY7XEkmBVzve+MXzLxndSeZcZKpWULIDDnFdBiwghCGgwDO2BW94UdOe9z8bWqchal8XLnQsTqchalzjHPb6+fd+WDTcOhqFFEJDI/Ip63j5MAjCV0Sgqun1Zwf/D0UpsrYA5i5cXBSIQojSuHq3Gn1157dZ3ioCwGVRv+5YzL0JqiPnh96zPrTin+/M9BW/wYCU2AHSm5MVFffa6WV709VgtvuvHEwfedml5l5ni0FpKy0OOND8J91jwtvzyc7q/0lPwBg9ORoYyMS9K6m2qn52MTU/ef8vFXSvDx4KBPJXhGuWoraSlHxDUk+0Pf3p9rrs4cXdvwftvI5NRQpR1/hY7RNAjlTjpLXhv7C6uuFuCko9yWYIWi7plTjIIwJs3Q354+4v1mtE1d/cW/deNTEYmE/PSQkSS5V05b2Qy/trK6tbLsDkdIm/VGiEt+bYIQGv3lIgIcu7omrv6iv7rDmZiXpIQkXewEpv+Lv/1w8UNXySChIMlblVKryVGG7NL9m7Z+NkVRf8dz1aihEBeKz4rozMQwJxW9PWzk9FnV1+/7Z2tmow75x5agkDTYGj33rwhOK3ov+PZSmwyMWcQoJ+txGZ5V+4P9225bDMNhlaCgTl/Ys+ph24Mee67+U1v782rz03GxlgHldVlZABpnloxbNHX+mA1esfZm7Z/bq6HyedMaIfDjJs2/FbBV98wzrGxwkSUiTnjMCIiWpHTzDIe29eevWnbvXMZfsxJyCFBwDQY2mduesMaX/GXROAlTigTc8axEBElTkgEuqjVXc/c9IY1afgxN+m8UzYiAIV79pB8en1OK/2lvK9W1Iy1nM3EzjgBDOKasTbv8UrF3pfl0+tz4do9NBeZj1MW3c5gQA2GoR2uFv5iWcF/6VjNmKzQKGMmmEiN1YzpL3q/sbdS/MzgYGh3BgOnrJtT+kY0Yp9nbtrw+8u7/DsOVRMDIMs1Z8wG05f39Gg1+f3V12+981Tj6ZMWdKPYZHjLhuf7Sv2zg/QkRijLaGTMBhGIp0lIMJE495JV1237j1OZn3hSIYcAhLUlkmBAO6E7fM19iXGSiTljthCBEuMk56leCN0hQyWFU4inTy6Grq9otDe//EOndfkvH4+MyZYZyDhZiEiNR8b0d/kv3/cz+yEaDC2GSielzVl/C4aGSmpwMLTDN238Lzlf/UNirbICzpYayDgVBBBFcJrZJcBvrvxA+EORgIlmF3rM6lsgAJXCtDMowF9qRb510vIdoU6FdP/AI6+lRqdcPwFknUAr9qyxt/3gtis9DM4+9JidWx8qMYWh3feIe29/l//S8VrStisaNdquS7vDr6KS9ljeZ54QAEUlR92DxvvtCBGpiSixy4u5F5998OB7KZx96NG0+iUAowwZ/eQbzhPj/ZsAXca2Z1ZDkC63BAA/GCngpxM5KBJc3FfDxb01xK7tTrkleCz4yaE8/m0sDyuEF3RHeEl/FQBgF2JKdhOIQDxFQsCEwF3c/4FtT8xmTmLzOeO1JSKEbm9N3bKsqHsOVWNLbbqcbX1HVnzu5/24/0AXNKdbtX57uAdvOH0MG886hMi14TdxjhAAORZsfboP25/pBSG9J98e7sYrV0ziD84badtrJwLF1rn+gt87Wk22EOHNMlRiIGzq95sS5JEBlMte1ZXTpbFa3LahhhOgoBweONCFXQe60ec5FFUj5HD42t5ePDiWR56lrWPKk8UJkGfBg2N5fO2ZHnQ1rl079HkOOw9044EDXSgo17bXz0TqUC22BU9dvv/jG9fRYH1d6mZ+d6YDBCDsvkBkqKSY6SZu8/11iQArhAfH8vDZQXCkQ8QEOAAPjuWhqJ2v4tTQlAragdJrrl9/6rld+m9CaOfSMRFAMcEZ2SJBwNh9QWM79GmZ2UMPlZjKZXfgUXt5X97/9YkosYT29M4NnABRI06eotvG/0auvb+Up4rDkes/6jrrf4kcwbb5DWh0EPuK/q/v7949SOWykyY6iNMeIABt3h3KE7eWCk7w4TjN0bXx9zpjUZHG0yJWgseCt+VRCt1MfdnpFT9U4nIZLm/kimVd/guqsXELskGPnMSrFTY76dWK659nCMTV2LhlRe+Xe4oTbyGCzJTGmy7LQSiF7rHgbXmRiWsjs0DemQHwLO/mTOl4AuDJzMd1IgJAN3n9sxWpq3dC5hMCRcaJFbnuseBtd2HwzghHElnP4YSC3hEMKKJdZt/NE5f3Fb3nH6osQGaDBVRR4L0+kDCaaQEBoABQxM9tVAGgBDSqoB7sggLN//KrLYYAKAgoVoA6jmgJoApD7elKFxps1qrn4E6PIUWbCnueqHtp21fwz2eZeBMBX5huDeoTCZrWbd5lBQN6H/C+ZCFiZwKoqqB3dwE1nuY7eTSCehxVpFTZx7NbY/CID6bFJ2gAYBFQgQEfxxU0EgIf8tH0vtH1e8/PejAXTkLybn5DEAIZJ+JIrpYguAubyxbl4x963PaUoRITQfYXlr+mJ6dfWImMzGvsXPekvM8Hqgz4kj5GvVm8mnnkLubXXF6/lrQNqpy2yfE8fwshEE/GiRR9/ZJnC3teTQQ5UV76+CJNc36wgvfwcbI/84ahI555rjswJ2Ozk16tuH5C2iYLgUC0Ihix7wNwWKPH8hxBp6vrl90zH7/sQl+rV49HRtp1VDDj5OjEfjARqfGaEU/zbz/z8csupHLZDZWe66WfI+hSKf2pLf1BT15rAHO+XFMrEQAeBP0isMfUtTa6lctFFmXs3IABLIfA4egGJgCWgGUi8NCRlYe2J681O347cESrUzmqXUVANBja/Vte3+OAyyuRBSAd1/YOwCtNAi2CCDjc+ZkAoV8EL7UJonYsE5wDCEBEhJeaBMvFYaLem2cAEQAtgleaZN6zb3ODcCW2gMjl+/5XqZsGQ3vslhdHiXXn5nQauYj32t68d2ZkrEWHra/BAGogrHUGV8UReiGIAcQAzhKH90RVnCGCBJ356J0JApAAOEMc3h3VcKY4JCBEAHpF8K64hrXOoNaRKUviKLG2J++dRRV5LQBqaLbBUWm7dVjngF0A5Aqizq3eIaSiHrAxLqoZPE4MBeAXnUUXgBoWp5gbNK7/ImdwY20Sj7CCBbBGHJaLQ7XD6xeYSMS5KwCERzRb/7fG/zSmjh+4tXQWEb1qMjaENq13bgYCUAGhWwQvcgYvdAYegCoWt5gbEIAqCB6AFzqDFzmDbhFUOlzMIOLJ2BCBXrV/y+vPpHLZTd0VYIpgdzIAGGNf11vwuo11x/apOg5G2qOtgFABPaeTtNhhpP2JxvVbdP71E0DGOttb9HoE/n8FgHV17QJHXd86BwCK6A2uIzvAx6fRIWp6VGyRsVivXwQikDcCjVA5her/SESQfbeUTodzD2tFPcbKwi0cIwA8gXq4CH7GP7lCmoy5pT5k7s6IYc+vAMnCPb8lHWQh49yYGP/802/48r6GhlMPHaYleSR2oDeve4xzdpFmtTIWAUQg45ztyfm9opIBAIc1XBf04UPXM5MQOjfDkbE0IJAohjDkNVPfZwBEYWgf/vT6HCCXRIkl6cDBlIylhUA4SiyJyCtkqOTXVywlPTRU4sHB0BYr/gVK8/Nqxs1vZd10EAHMaYF/9sxYWAjpLOM2mVlLIK4ZJ57m5w0/Yn4FwI+HhkqsS7uHCQA8eC/rznk8WonaY4kCIiCKgQlz/LrejPmFkA63Rq5tRC0irjvnqzGJXwbgx6Xdw6SxdpUAAJO8HBC0xQghM1CrAq9eByy/CLBVdH4GtdNxgCoAB38CPPEtQBcAWdiKkIZWnaNLAPwV1q4S3VjEY/hR9+LIOAiEFzzBQQQkCbD2fMivDgDVCqAyQS8o1gGFIvCjCHjk7wCvuOBPTYFwZBwAvLixGJIGgEOPJ2uIeE1sHNrmedIIOSZrQHUy9doZC4dzgOO0TdpEIgBRbByYsGb4cV4D4BENALGoX+nOa3+smjhup/qNw51CzgTdDjC3kZjrw+DOud68l5uouV8G8AgDgIP8qscMIurMMtmMJQsTOa0YIPdCoN7TUoIL5NhK6YyMDkCO/FwLpBleEuD5sU07hAt4bhkZJ4FwbBwgeD4A6CeDUn8e9pzECrBE97Eiar7QRmZYg5YIzceZacnY9Pa4WVuAzGCs6etswlbbIETGOhDknJ/f9Lp+nevCuXC0zM64DN7ihIhQq9QQRwlm2ppcRFDsLkB7+rgNTkSIoxi1StSUrXwxBz/nn9CWSQwqE9WmbPk5D/li/oS2rHWoTEzOmGoTEWhPo9hd6AxRE2CcAETL8uKfq0nc2TlP5aqJEV6Km80TkCQGtcloRm+YijA/7THGuKYFrX0Pfu7ExzgnzdlyAmJCfprVpUQEUTWacSxEROAXBEUUpj+wTSCArHOS91Q+SvhsLXDnataor2O+9ASN1IMR08yP9yYcFlEaJszoG6S5yKQpW0Dzx8zUS5LmbLUVBNHMVENyLhP4vPS9hR73ycg4ORraJeA8huAsytSc0eHUNXwWg2SVLM3+YMYiQtIQbhVD0G9FkGk6o1MRgKwIAOpnIup1rp6DzsjoRIQo1TB62Ql6XBZzZHQyBLg0Z97DAArNb02QkdGepEEGCppI8vUBoUzTM6V6mk0FNbvg+FzZmg1zdY1tBKX1SCCRvBaQboNJVwuGOEGhmEcu7zd1vNLqhEPC6RC0j2UrmpuSyWp6W9pTWLaitzlbzCesMxERKGb09vc0ZYuYOmPYeyrp+WoNgZIl7puVZqjj7jD0XGZqaGaCUt6c2CIieH5ztoAZCp0Is7DVQcVJdQSAENR0+xQuGdK2m7sGnEsxtKutdoVBsEvcQWcsAggACSwTxGTdwYyOJx1GMSxCtXp11eJ/HmUsStKMHQCiGiPd2jJTc0ZHwwSIoMogjHMnlts1pgnNsFlks/2g+bfVnDFpYkPMObfVgVpgIgAyriEyxkwASZMl5wsPEWF8bBJJlMx4xkRA97Ie6BPkj4kJlfFqfWbI9LZEgJ5lXfB874RTnWrVCJXxalO2ij0F5Au5E9pK4gTjo5NN2coXcyj2FI6biyYiGGMxMTo+45dSBPByHnr6ujonK0IizEQAjWkiHFTp3NgOOfsU5xyMMTPOrmjmK+qcg0lMU1OwZhaENHVeqa3pjYmgOVtO4NzMOWZjbFPnr7yFX6tzNhAgighEOKhFsL8z/PJzIZp5elKz19aMrWaZd1uzuMbFShpxYJiJ6KlOebJkZJyI+uDY0yxwPweQFfhndCwN7RLR40zgJ4wTZCuBZXQsAjLOwYh7koXMf0aJjTQzdWDCJmOJI4AoZoqMqxHzkxxN+k8AMqq40/IcGRkABNDpqMpozjNP8LnlcESAJz3VyEVnZHQQJJIup4sn+t/31VEGIAz8h68YhM5aH7qZka9mnzrNjaJ1tq1m7lXnuTRyvmaI0M8AQAOAFeyhDlsLjJmgNGOm5VKbWm6L6rZmymlDmhiZbPK8IE3l0JuyxTPbAgBWPPNqpxBwsyuetgGNMyXBbqAuaGH3o8Q6iHTGeo0igq6eIrqam1GUbgJ9oqlOTlDsKqDQNf0ijE3ZEkEu78PPNTczZCZb2tPoX9HXnC3Q9FOwFKPvtOamczV+pxNwImysgyX3Y6AuaCY8NBmZSDPnrIgs3LbkzTOnXzzCjF5wVubm8Nza1VY7IIBoZp6ITEQ+PQTU16JctcZ73Ake9zWjE6OojKWKiK8ZAjy2+vvq5wDAjf3dAPmXnO68jmHG0oVALqcZJPghhel+m4z61sgg+Q5ASCOOjIz2p6FVgXwXALB7mDisb40Mct8bjxJH7bRPYUbGNBART0SJhejvAUC4Z5Xw4GDoAOBQLnrIOfdoXjPJQm/i3ARER0orZ3o1Z689bWUcH4G4vGZKjHv0UHHs3wFgMAxd2gssldT5V98TQeg7OU9JJ8TR1jgkiYFp4jVTN9c5hySe2U6SmJmL8p00dV5JYmbcUStjOsjlPCVE9MD5V98TyVBJAZB0oZkSgBAA8E3r5Pelzfd3IyJMjFcQ1+KmBif6TuubdgpWdbyG6kStqRkrfct74eemmYIVRZg4NNnUjJXuvi4UTrBzVcb0CIStAxHzPVPfT+PlUhp2CPP941EypplVugZ6Rkb7IQLxmHmsFo+5RN8P4LCGGQCIIBIEvPracC+EvlP0taAD4uiMpYq4oq+FwPeffsOX90kQcL1yY+omXztTcQPbuZ3jjYwMAEwgAm0HgJ117QJHCXpd6rI9/sahajyhFaus4D+j3RBAtGI1WknGqxR9EwB21rULTBE0lctOgoBXvD98SgR/3+VrgWRhR0abIeK6fC0E3HfedV97WoKAy+XycwUNHHHdBPpiNmKY0Y4IQE6EBPxF4OhwAzhG0Os277IAQJR881AteTqnlco6hxntgkBc3lM8VkueQjfuAYB15VSzDY4SNBFEhkpq5XVfG1dEXy7mFNABgywZSwMCuaKvwKAvr353OLEjGNDHzoR9Tt1GmA6wwLC7Y6JmEqDJvRrmmcZSWs285tPWbOxlzBo1UTOJAu4AgHVTOoMNnrMlxWAYWgkCpmvKD+69ecN9fXlv/VgtsUTUVsL2fS+tiZjhuEbNxwkRQHsauUJu5kURgRlHE5Xi1NYM5yX1YzOaQ0Rsb95TY9Xk3tWbtu2WIGCa0hlscPw9VtbuIQBgwmecYD3abAaLiKDYXZjV8dNNdcoXcygUm5uCNZMtz/fg55rbUSvz1LOCrABE9BkAhzV6LMcVNA2GTgSEUH1r36PJj7pz+oWTsXGE9iktnVMhCDCXI/2ZSOcWgbiunKbxWvKj039RfVsERBQet293IoHKzs0DigZDqwif0Mw0py2ekTEbBKKZiRmfoMHQIiydcNOJE3rcS8u7rAhootITHqrFDxd8zZ1QJ52xuBCIK/iaD1Xjn67KnzUkAqLB43tnYBpBAxCEJf6F8p01EtyS05mXzlgABJLTTER0C139mWg67wxML2hgMHQSgGueumu0kvx75qUz5hexBV/zSCX598nKgbuCAIxpvDMwg6AJEKwt0bnvD6vicKOnMi+dMX+IAL5iYlD5F8q7apvXlmbc3mrGrAUNpnnp1dGFfztWjb/fnfeUm6+iJaJsmZB2QuZvsTgn4rrznhqtxd9bWV07JEHA6XIb09PcXt9r9xANhvbZWzZcY6y7n1s+wTMVsVQOgZQCnG2zTPgSxFlAKUhltP5Gax2NIpLEOkdC11C57OpzBmekaZk0FqR55uYNX1he9K8YqcSWWzV6SATYBOhdBX3Zh4DlZ6Z/z1S9QAigPODgU7B3fxQyNpz+vUVPTwHMsoKnD1aiL5xx/d1vPbIY0sw056EBYHcoIqCR/4kbJiLzel9xV2KlNbNppX4DR/fB3v1R0NpLQV3LsvBjoSCCTI5Cdv89ZHQf4PmtE7NAPE08UTNjOegbREDYHDb9YbMSY+Obsvfmy/6kv5j/5Eglap2XBlJPbRLAxEgHKTNBLwyUVhFrH9Ct88zAEe88Mhn/yembtn16Nt65fqaz+jBCqcQoAcOP2ge6895vTrS6cIkIWajRLrR2RXQRsd05T43HyfdWVy56RbhnD5XC0M1ms5RZ1WY0DNNgaMHqj+PEJul4Swtdp9QnoGevNni11DOLZoXYudh38sdULjuUjmiuWWZdbNRY5XH1teGPqon7aG/BVwCafiRkZJwA21vQqhonH12+6e4fy1BJDc4i1GhwUs9yAQhDJd65e5jWFk/b0Z3zLhlvw5rpjM7gcK1zLXlg1fPUpQCAwdmFGg1OqhyUAMHuUC4t7zJi1dujxI55milbbSljtqRZDaZqYsfA7u00GFrsDuVkNxk86fpmKsPJUEmt/mD4s2oi7y16momy0CNjdhDBFj3NNSvvXX3t9kdkqKSojJMeiT6lgn0aDO2OYECf+cGtd45Uo9v7i74WgTkVmxlLBycw/UVfj1Ti2868fuudO4IBPZsU3fE45XyYABSWSvyrl4zr/lrXjq6c/s2xWtLa/HRGx+PqcfNkZP9hJD+x7kdn9JjSScbNUznlKVUESOmCC+T8q++JlPCbq4nbn9dKuazMNOMEOIjLa6Vqxg2r2L35/KvviUq7LzjpuHkqczZi0RjR+c+bNvxWj6++YZ3jxApTtlR9xhRERDylnGLIeC1ef/YNX71vtqOB0zFnk17TMtMBffambfdWYntl3tNKMdks85HRQASimGzeY1WJzJVn3/DV+2QO4uapzOksbirvMhIM6DM2bfs/Y9Uk6Cv4GlnmI6MBwfblfX2oGpfP+ODdd0gwoKm8a06TCC0JBxqPkH1bNty+vCv3zpHJOAHQ3H7BGYuVpL/oewcnor9ZvWnblTuCAX3pHIsZmGMPfZjB0A2VSmr1dduuHKnEX+wv+h4gSUs+K6MTSPqLvjdSie9avWnblUOlkjp2kcW5omUdNhHQ5s0gIMC7iw9+ZVnRv2ykEiUAZZ56CSEiSX9XzhurxttPm7xwIzaX0wI3ak3fqmUrIaUnHGBzuSz7KvzmQ9X46/3FnAcg89RLh2R5V847VEm+uXeSL0e5LIC0TMxACwUNAOVy2SEI6KJyGB98cnLjaCW+u7/oe4JsNHGxI4DpL/reWDXZPlHZv+HCchgjCIiIWpr1mpcccRCAb7wR7m/fVFKverG7s6/Lv2KkEhsBdJakXlzU54Wb5UVfj1bjL572z/w2CkMrAfhUajSaZd70JAEYmyFEkANbNv51X9G/arQSWyvgbNetxYETiCK4vqKvDlXj21deu/WqdE4gaD7EDLQ45JhK44IkCHjFdVvfNTIZbe7KaaU4HQqdr/PIaA0O4hQTunJajVaiYOW1W6+SIEj37JknMQMLMFmvUcw0GIZ2+KaNf+D7fBsAXUtsVtDUoTgRm/eUAmBMIleuuP4rdwyVSmq28wHnggV71DdGifbetOG3Cr6601fqzLEoNgRqfmmFjAVHIKYn5+nYyt6J2Lz17E3b7m3FCGCzLNgC5lTeZXYEA/r0TdvuHangklpiv9Nf8LWIWJfVf7Q9TiAiYvsLOR0Z+91abF5+9qZt9+5YQDEDbbA+QGOY/BvvWZ/79XO6P9Wd0++qxAaxdVkI0qY4EespVl2+xkSU3P6TyQNXX1reVWvVcPZsWHBBA2lHsbEBzIGb3/R2VvSJvKeWjUeJAaCoTc5zqVNfrsL25LSOjDuUWPenq67b+jng6DZcSNpGKEd1Fj/2xvOV1rf15L11o9UYIpLNKF9gRMQykVpW9DEWJfdHxrzrzOu3P7RQnb8T0TabABEgg2E6R3HVB7c//BeTX3n1aCXarJlMd85TApistnr+EYEIYHrynlJMyaFqsvm+f6RXnXn99od2BAN6MAxtu4gZaCMPPRUJAka5LATIMx/b+Bu+R5/qyXkvHY8SJFlsPW80YuXunIeJyDwQ2+QDZ1y//Z8IgGuTEONY2lLQdWhHMKAurWdD1nateq/P+FDeU/2HarGDQLIwpDWIiAXAywo+VRM7Yqz789Ou2/opQrp1dn3TnrbxylNpZ0EDOLqzsfemDc/zNN2oma/QzJiIEgsCtdP+iZ2MQBwE0p3zVGwdAHw+dsmNq6/d/kg7e+WptL2ggSNLjzXmnu3fsvHVWtGH855+ZWIdqrHJhH0KNIRc8LXymFAz7n4R+rPl1wzdDwDtkI5rlo4QdIMjtQFlB4AObnnTW0jh2oKnL44zYc+aw0L2tPI1oxqb3Ubk5pXXbv0CAAwNlVRp9wXS7l55Kh0l6AZDpZK6PAytAHj40+tzK+Put4DwpwVPX2icw0RkhABHRIwOvcYWIiLiQKCip9lTjGpk90DhU+PAF859f1glAH9bKqnBcO5mY88XHd3YU9dzeOJ9pULhDLdRgf7I0/wyzYzxKIEAhiCMJe610/0lyRGge/Ia1gGJtT+wVv6qspe/dO4nwypw9D3tRDpa0MBz42sAePaW0npA/odAXtub91UlMagZ60ggAHFL9oVpQ9K8vTgBKO8pLnoaY7XYCehbiumv+8cv+LtGOCFDJXWyS9i2E4umYRvCntooB28tXQShK0Tc5XlPrVFEmIwNjHV18S8+cTdEDABasSr6GiJANTGPE/AVIrmr/wNb/7Vx/I5gQK8r72qrwZFTYVE1ZgMZKilM6cw88/Hf68qj+hoHeotz8uregrfMCVCJDRLnHIOcQLhTO5MCcQRyIkINEROAyciMAbiXib4UF3DP6neHE0C9c53uPdm2+eSTZVEKuoEEAe/ETp6acjrwkdJZ8PAaYnm9iLyy6Ot+xYTIONQS26gbEUnjbmq3wqi0QEikIWAiUnlPIacZ1gkqsTnI4O87wt2w5lsrrr/7Pw//bjCggXWuk7IWs6WtGqtVNMKRMASm9tyHP3LZGV5Ov9yJW+8ErwDh/J6cByIgMg6xcXDiLJDOVBYIo74zY6uFLqjvqk6peOvvEhMrXzNyOn2YjNUMIPIwEx5QRPdqoZ3d14Z7D9upe+PFEB83w5IQ9FREQDs3D6h1x3gque1Kb/jg/gtYqZcS4RJr3a8x0ZqunM5pZoCAxDgk1sE4gXUiqdiO7IAtAGHKVqQnEv3hXcMOC/a5NhQTaSZoxfAVp1s2WsF4lERO5HFN/M9g+seacd89a/lpD9JVtx9e76TxZFq3eadt9bIB7caSE/RUREAIS+lgzTGpKgkCHs7teR6xez4gLwLTC+DkfADngWhZTnNec+olqa5IKwLnBK5eouYaAULdJtX/aPREmQjMBEV02AYAGOcQGVcjyKgjepohP7UOP1UK/+IS9dBfRuGj5WMmnh7eC7sUulYu5NLuLGlBT0UAQhAQsJOxdpWcKBc7etPr+iP45xLps4ncOSKyBoSzCLRSgOUi0kegbpAUBCgAUDg8T1IM0i3wqiRUFcgEER0i4KBA9kPwFBE9LuKedMxP5m3tyWWbvj5y3PMdKinsHiZgnWtUJrbo1nQU/x8AquIAmHduxAAAAABJRU5ErkJggg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-database-compat.js"></script>
 
 </head>
 <body>
-<div class="wrap">
 
-  <div class="top-nav">
-    <div class="brand"><span class="brand-dot"></span>Calend</div>
-    <div class="nav-actions">
+<div id="app">
+  <div class="conn-banner" id="connBanner"></div>
+  <div class="board-header">
+    <div class="title-block">
+      <p class="eyebrow">Shared board</p>
+      <h1>Calend.</h1>
+    </div>
+    <div class="header-actions">
+      <a class="theme-toggle" id="homeBtn" href="index.html" title="Back to homepage" aria-label="Back to homepage">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"></path><path d="M5 8.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V8.5"></path></svg>
+      </a>
       <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">
         <span id="themeIcon">☾</span>
       </button>
-      <a class="nav-cta" href="calendar.html">Open Calendar</a>
-    </div>
-  </div>
-
-  <div class="hero">
-    <div class="hero-copy">
-      <p class="eyebrow">A shared board, not a shared inbox</p>
-      <h1>Pin your dates.<br><em>Everyone</em> sees them.</h1>
-      <p class="lede">Notice Calendar is a simple shared calendar where anyone can pin a quick note to any date — birthdays, deadlines, "trash day," whatever. Each person gets their own color, so at a glance you know who pinned what.</p>
-      <div class="hero-actions">
-        <a class="btn-cta" href="calendar.html">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          Open the Calendar
-        </a>
-        <span class="hero-note">No account needed to peek in — just pick name and pin note.</span>
-      </div>
-    </div>
-    <div class="hero-art">
-      <div class="cork">
-        <div class="cork-grid">
-          <div class="cork-cell"><span class="num">3</span></div>
-          <div class="cork-cell"><span class="num">4</span></div>
-          <div class="cork-cell"><span class="num">5</span></div>
-          <div class="cork-cell cork-today"><span class="num">6</span><div class="note n1"></div></div>
-          <div class="cork-cell"><span class="num">7</span><div class="note n2"></div></div>
-          <div class="cork-cell"><span class="num">8</span></div>
-          <div class="cork-cell"><span class="num">9</span><div class="note n3"></div></div>
-          <div class="cork-cell"><span class="num">10</span></div>
-          <div class="cork-cell"><span class="num">11</span></div>
-          <div class="cork-cell"><span class="num">12</span><div class="note n4"></div></div>
-          <div class="cork-cell"><span class="num">13</span></div>
-          <div class="cork-cell"><span class="num">14</span><div class="note n5"></div></div>
-        </div>
+      <div class="profile-chip" id="profileChip" title="Click to change your name or color">
+        <span class="profile-dot" id="profileDot"></span>
+        <span class="name" id="profileName">Set up profile</span>
+        <span class="edit-hint">✎</span>
       </div>
     </div>
   </div>
 
-  <div class="recent-section" id="recentSection" style="display:none;">
-    <div class="recent-head">
-      <p class="section-label" style="margin-bottom:2px;">Jump back in</p>
-      <h2 class="section-title" style="margin-bottom:0; font-size:24px;">Your recent boards</h2>
-      <button class="clear-recent-btn" id="clearRecentBtn">Clear list</button>
-    </div>
-    <div class="recent-list" id="recentList"></div>
+  <div class="board-bar" id="boardBar">
+    <span class="board-bar-label">Board</span>
+    <code class="board-bar-code" id="boardCode">—</code>
+    <button class="board-bar-btn" id="copyLinkBtn">Copy invite link</button>
+    <button class="board-bar-btn ghost" id="switchBoardBtn">Switch board</button>
+    <button class="board-bar-btn danger" id="deleteBoardBtn">Delete board</button>
   </div>
 
-  <p class="section-label">Why people use it</p>
-  <h2 class="section-title">Designed for simplicity. No account needed, so you can start using it instantly</h2>
-
-  <div class="features">
-    <div class="feature-card">
-      <div class="feature-icon gold">📌</div>
-      <h3>Pin a note to any date</h3>
-      <p>Click a day, type up to 20 characters, done. No event forms, no fuss.</p>
+  <div class="nav-row">
+    <div class="month-controls">
+      <button class="nav-btn" id="prevBtn" aria-label="Previous month">‹</button>
+      <select class="jump-select" id="monthSelect"></select>
+      <select class="jump-select" id="yearSelect"></select>
+      <button class="nav-btn" id="nextBtn" aria-label="Next month">›</button>
+      <button class="today-btn" id="todayBtn">Today</button>
     </div>
-    <div class="feature-card">
-      <div class="feature-icon teal">🎨</div>
-      <h3>Your own color</h3>
-      <p>Pick a color when you join. Every note you pin shows up in it, so it's obvious who wrote what.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon blue">🔄</div>
-      <h3>Syncs live</h3>
-      <p>Notices sync instantly across everyone's devices — no refreshing, no "did you see my message."</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon red">✎</div>
-      <h3>Edit your own</h3>
-      <p>Made a typo? Changed your mind? Rename or delete your own notices anytime.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon purple">📱</div>
-      <h3>Works on any device</h3>
-      <p>Switches to a clean scrollable list on small screens, so it's just as easy to use on mobile.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon mono">🔒</div>
-      <h3>Privacy First</h3>
-      <p>Your Information is never shared with anyone.</p>
-    </div>
+    <div class="legend" id="legend"></div>
   </div>
 
-  <p class="section-label">Getting started</p>
-  <h2 class="section-title">Up and running in under a minute</h2>
-
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">01</div>
-      <h4>Open the calendar</h4>
-      <p>Click the button below — no download, no install, no sign-up walls.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <h4>Pick your name and color</h4>
-      <p>Takes a few seconds. You can change either one later.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <h4>Start pinning</h4>
-      <p>Click any date and add your first notice. Everyone with the link sees it right away.</p>
-    </div>
+  <div class="weekdays">
+    <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
   </div>
 
-  <div class="closing">
-    <h2>Ready to pin your first note?</h2>
-    <p>Share the calendar link with anyone you want on the board.</p>
-    <a class="btn-cta" href="calendar.html">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-      Open the Calendar
-    </a>
-  </div>
-
-  <footer>Calend — a small shared board for everyday dates.</footer>
+  <div class="grid" id="grid"></div>
 </div>
 
-<script src="landingpagescript.js"></script>
+<div class="overlay" id="overlay"></div>
+
+<div class="panel" id="dayPanel">
+  <div class="panel-head">
+    <p class="eyebrow" id="panelEyebrow">Notices for</p>
+    <h2 id="panelDate">—</h2>
+    <button class="panel-close" id="panelClose">✕</button>
+  </div>
+  <div class="panel-body" id="panelBody"></div>
+  <div class="add-notice-block">
+    <div id="needProfileNote" class="need-profile-note" style="display:none;">
+      Pick a name and color first — <a id="setupLink">set up your profile</a>.
+    </div>
+    <label for="newNoticeText">Pin a new notice <span id="newNoticeCounter" class="char-counter">0/20</span></label>
+    <textarea id="newNoticeText" maxlength="20" placeholder="Write something for this day…"></textarea>
+    <button class="pin-btn" id="pinBtn">Pin note</button>
+  </div>
+</div>
+
+<div class="modal" id="profileModal">
+  <h3>Set up your board identity</h3>
+  <p class="sub">Your name and color show on every notice you pin. You can change these anytime.</p>
+  <div class="field">
+    <label for="nameInput">Your name</label>
+    <input type="text" id="nameInput" maxlength="24" placeholder="e.g. Sam">
+  </div>
+  <div class="field">
+    <label>Your color</label>
+    <div class="color-row" id="swatchRow"></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn-secondary" id="profileCancelBtn">Cancel</button>
+    <button class="btn-primary" id="profileSaveBtn">Save</button>
+  </div>
+</div>
+
+<div class="modal" id="groupModal">
+  <h3>Private board</h3>
+  <p class="sub">Boards are private to whoever has the code — think of it like an unlisted link. Anyone with the code (or invite link) can see and pin notices.</p>
+
+  <div id="groupContinueRow" style="display:none;">
+    <button class="btn-secondary" id="continueGroupBtn" style="width:100%; margin-bottom:14px;">
+      Continue with board <strong id="continueGroupCode"></strong>
+    </button>
+  </div>
+
+  <button class="btn-primary" id="createGroupBtn" style="width:100%; margin-bottom:16px;">Create a new private board</button>
+
+  <div class="or-divider"><span>or</span></div>
+
+  <div class="field" style="margin-top:16px;">
+    <label for="joinGroupInput">Join with a code/Create One with custom code</label>
+    <div style="display:flex; gap:8px;">
+      <input type="text" id="joinGroupInput" maxlength="10" placeholder="e.g. K7P2XQAF" style="width:auto; flex:1;">
+      <button class="btn-secondary" id="joinGroupBtn" style="flex:none; padding:0 16px;">Join</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteBoardModal">
+  <h3>Delete this board?</h3>
+  <p class="sub">This permanently deletes every notice on board <strong id="deleteBoardCode"></strong> for everyone. This can't be undone.</p>
+  <div class="field">
+    <label for="deleteConfirmInput">Type the board code to confirm</label>
+    <input type="text" id="deleteConfirmInput" maxlength="10" placeholder="Type the code exactly">
+  </div>
+  <div class="modal-actions">
+    <button class="btn-secondary" id="deleteCancelBtn">Cancel</button>
+    <button class="btn-primary danger-btn" id="deleteConfirmBtn" disabled>Delete board</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="calendarBackEnd.js"></script>
 </body>
 </html>
