@@ -1,0 +1,146 @@
+
+:root {
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-emphasized: cubic-bezier(.2, .8, .2, 1);
+  --motion-fast: 160ms;
+  --motion-base: 240ms;
+}
+html, body, #app, .day-cell, .panel, .modal, .notice-card, .profile-chip,
+.nav-btn, .jump-select, .conn-banner, .toast, .pin-tag {
+  transition-property: background-color, color, border-color, box-shadow, opacity;
+  transition-duration: var(--motion-base);
+  transition-timing-function: ease;
+}
+
+@keyframes cellIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    opacity: var(--cell-opacity, 1);
+    transform: translateY(0);
+  }
+}
+
+@keyframes pinIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px) rotate(var(--tag-rot, 0deg));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--tag-rot, 0deg));
+  }
+}
+
+@keyframes panelPop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes spinIn {
+  from {
+    opacity: 0;
+    transform: rotate(-45deg) scale(.85);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+.day-cell {
+  --cell-opacity: 1;
+  animation-duration: 420ms;
+  animation-timing-function: var(--ease-out);
+  animation-delay: calc(var(--i, 0) * 12ms);
+  will-change: transform, opacity;
+}
+
+.day-cell.other-month {
+  --cell-opacity: .42;
+}
+.empty-hint {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.day-cell:hover {
+  transform: translateY(-2px);
+  transition-duration: var(--motion-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.day-cell:active {
+  transform: translateY(0) scale(.985);
+}
+
+.pin-tag {
+  animation-duration: 220ms;
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+}
+
+.theme-toggle,
+.nav-btn,
+.today-btn,
+.pin-btn,
+.panel-close,
+.icon-btn,
+.swatch {
+  transition: transform var(--motion-fast) var(--ease-out),
+              background-color var(--motion-fast) ease,
+              border-color var(--motion-fast) ease,
+              color var(--motion-fast) ease,
+              box-shadow var(--motion-fast) ease;
+}
+
+.theme-toggle:hover { transform: scale(1.04); }
+.theme-toggle:active { transform: scale(.96); }
+.nav-btn:active, .today-btn:active, .pin-btn:active { transform: scale(.98); }
+
+.panel {
+  transition: transform 360ms var(--ease-out),
+              background-color var(--motion-base) ease,
+              border-color var(--motion-base) ease,
+              box-shadow var(--motion-base) ease;
+  will-change: transform;
+}
+
+.overlay {
+  transition: opacity 220ms ease;
+}
+
+.modal.show {
+  animation-duration: 260ms;
+  animation-timing-function: var(--ease-out);
+}
+
+.toast {
+  transition: opacity 180ms ease, transform 220ms var(--ease-out),
+              background-color var(--motion-base) ease, color var(--motion-base) ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

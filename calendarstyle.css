@@ -63,23 +63,6 @@
 
   *{ box-sizing: border-box; }
 
-  @keyframes cellIn{
-    from{ opacity:0; transform: translateY(4px) scale(0.98); }
-    to{ opacity:1; transform: translateY(0) scale(1); }
-  }
-  @keyframes pinIn{
-    0%{ opacity:0; transform: scale(0.4) rotate(0deg); }
-    60%{ opacity:1; transform: scale(1.08) rotate(var(--tag-rot, 0deg)); }
-    100%{ opacity:1; transform: scale(1) rotate(var(--tag-rot, 0deg)); }
-  }
-  @keyframes panelPop{
-    from{ opacity:0; transform: scale(0.94) translate(-50%,-46%); }
-    to{ opacity:1; transform: scale(1) translate(-50%,-50%); }
-  }
-  @keyframes spinIn{
-    from{ transform: rotate(-90deg) scale(0.5); opacity:0; }
-    to{ transform: rotate(0deg) scale(1); opacity:1; }
-  }
 
   html, body{
     margin:0; padding:0; height:100%;
@@ -466,16 +449,24 @@
   }
   .day-cell:hover .empty-hint{ opacity: 1; color: var(--accent-teal); }
 
-  /* ---------- Overlay ---------- */
   .overlay{
-    position: fixed; inset:0;
-    background: var(--overlay-bg);
-    backdrop-filter: blur(1px);
-    z-index: 40;
-    opacity:0; pointer-events:none;
-    transition: opacity .18s ease;
-  }
-  .overlay.show{ opacity:1; pointer-events:auto; }
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+
+  background: rgba(20, 28, 35, 0.22);
+  backdrop-filter: blur(7px) saturate(.85);
+  -webkit-backdrop-filter: blur(7px) saturate(.85);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease;
+}
+
+  .overlay.show{
+  opacity: 1;
+  pointer-events: auto;
+ }
 
   /* ---------- Day panel ---------- */
   .panel{
@@ -828,15 +819,32 @@
     .empty-hint{ opacity: 0.3; font-size: 18px; }
 
     .panel{
-      width: 100%;
-      top: auto; bottom:0; right:0; left:0;
-      height: auto;
-      max-height: 88vh;
-      border-radius: 16px 16px 0 0;
-      border-left:none;
-      border-top: 1px solid var(--card-border);
-      transform: translateY(100%);
-    }
-    .panel.open{ transform: translateY(0); }
+  width: min(400px, calc(100vw - 24px));
+  max-width: none;
+  height: auto;
+  max-height: calc(100vh - 32px);
+
+  top: 50%;
+  right: auto;
+  bottom: auto;
+  left: 50%;
+
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+
+  transform: translate(-50%, -46%) scale(.98);
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    transform .28s cubic-bezier(.22,1,.36,1),
+    opacity .2s ease;
+}
+
+.panel.open{
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
     .title-block h1{ font-size: 26px; }
   } 

@@ -99,6 +99,28 @@
     targets.forEach(el => observer.observe(el));
   }
 
+
+  const recentList = document.getElementById("recentList");
+
+  recentList.addEventListener("wheel", (event) => {
+  const scrollingDown = event.deltaY > 0;
+  const atStart = recentList.scrollLeft <= 0;
+  const atEnd =
+    recentList.scrollLeft + recentList.clientWidth >= recentList.scrollWidth - 1;
+
+  const canScrollSideways =
+    recentList.scrollWidth > recentList.clientWidth &&
+    !((scrollingDown && atEnd) || (!scrollingDown && atStart));
+
+  if (!canScrollSideways) return;
+
+  event.preventDefault();
+  recentList.scrollBy({
+  left: event.deltaY,
+  behavior: "smooth"
+});
+}, { passive: false });
+
   initTheme();
   renderRecentBoards();
   initScrollReveal();

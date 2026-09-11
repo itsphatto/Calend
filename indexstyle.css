@@ -1,4 +1,3 @@
-
 :root{
     --paper: #EDF1F4;
     --paper-line: #DCE4EA;
@@ -66,6 +65,14 @@
     0%, 100%{ box-shadow: 0 0 0 3px rgba(226,163,61,0.25); }
     50%{ box-shadow: 0 0 0 7px rgba(226,163,61,0.12); }
   }
+  @keyframes heroArtFloat{
+  0%, 100%{
+    transform: translateY(0);
+  }
+  50%{
+    transform: translateY(-4px);
+  }
+  } 
 
   .reveal{
     opacity: 0;
@@ -109,7 +116,7 @@
   .brand{
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:16px;
     font-family: var(--font-mono);
     font-size: 13px;
     font-weight:600;
@@ -158,7 +165,6 @@
   }
   .nav-cta:hover{ border-color: var(--accent-teal); transform: translateY(-1px); }
 
-  /* ---------- Hero ---------- */
   .hero{
     display:flex;
     align-items:center;
@@ -231,11 +237,10 @@
     color: var(--ink-faint);
   }
 
-  /* ---------- Hero illustration: corkboard with pinned notes ---------- */
   .hero-art{
-    flex: 0 0 340px;
-    max-width: 100%;
-    animation: heroArtIn .7s cubic-bezier(.22,1,.36,1) .15s backwards;
+   flex: 0 0 340px;
+   max-width: 100%;
+   animation: heroArtFloat 5s ease-in-out infinite;
   }
   .cork{
     position: relative;
@@ -317,6 +322,7 @@
   .recent-card{
     opacity: 0;
     animation: fadeUp .5s ease forwards;
+    
   }
   .recent-card:nth-child(2){ animation-delay: .06s; }
   .recent-card:nth-child(3){ animation-delay: .12s; }
@@ -347,24 +353,41 @@
   .clear-recent-btn:hover{ color: var(--danger); }
 
   .recent-list{
-    display:grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 12px;
-  }
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 32px) / 3);
+  gap: 16px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 10px;
+
+  scroll-snap-type: none;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+}
+
   .recent-card{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap: 10px;
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 14px 16px;
-    text-decoration:none;
-    color: var(--ink);
-    box-shadow: var(--shadow-pin);
-    transition: border-color .15s ease, transform .12s ease;
-  }
+  min-height: 112px;
+  aspect-ratio: auto;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  text-decoration: none;
+  color: var(--ink);
+  box-shadow: var(--shadow-pin);
+  transition: border-color .15s ease, transform .12s ease;
+  scroll-snap-align: start;
+}
+  
   .recent-card:hover{
     border-color: var(--accent-teal);
     transform: translateY(-2px);
@@ -373,9 +396,10 @@
   .recent-card-code{
     font-family: var(--font-mono);
     font-weight:700;
-    font-size: 14.5px;
+    font-size: 16px;
     letter-spacing: 0.03em;
     display:block;
+
   }
   .recent-card-time{
     font-family: var(--font-mono);
@@ -450,8 +474,6 @@
     color: var(--ink-soft);
     margin: 0;
   }
-
-  /* ---------- How it works ---------- */
   .steps{
     display:grid;
     grid-template-columns: repeat(3, 1fr);
@@ -472,7 +494,7 @@
     font-family: var(--font-display);
     font-size: 34px;
     font-weight: 700;
-    color: var(--paper-line);
+    color: rgb(14, 92, 66);
     line-height:1;
     margin-bottom: 10px;
   }
@@ -488,7 +510,6 @@
     margin:0;
   }
 
-  /* ---------- Closing CTA ---------- */
   .closing{
     text-align:center;
     background: var(--card);
@@ -533,4 +554,7 @@
     .hero h1{ font-size: 32px; }
     .hero p.lede{ font-size: 15.5px; }
     .top-nav{ flex-wrap: wrap; gap: 12px; }
+    .recent-list{grid-auto-columns: minmax(220px, 82vw);}
   }
+
+  
