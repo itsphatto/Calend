@@ -997,7 +997,7 @@
 
   function applyTheme(theme){
     document.documentElement.setAttribute('data-theme', theme);
-    themeIconEl.textContent = theme === 'dark' ? '☾' : '☀';
+    themeIconEl.textContent = theme === 'dark' ? '⏾' : '☀';
   }
 
   function initTheme(){
