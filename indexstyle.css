@@ -70,7 +70,7 @@
     transform: translateY(0);
   }
   50%{
-    transform: translateY(-4px);
+    transform: translateY(-6px);
   }
   } 
 
@@ -101,12 +101,12 @@
   }
 
   .wrap{
-    max-width: 1250px;
+    max-width: 1460px;
     margin: 0 auto;
     padding: 32px 20px 60px;
   }
 
-  /* ---------- Nav ---------- */
+  /* ---------- Navgation ---------- */
   .top-nav{
     display:flex;
     align-items:center;

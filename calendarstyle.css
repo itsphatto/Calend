@@ -83,7 +83,7 @@
   #app{
     max-width: 980px;
     margin: 0 auto;
-    padding: 20px 18px 80px;
+    padding: 55px 18px 80px;
   }
   #app.app-locked{
     pointer-events: none;
