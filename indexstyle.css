@@ -101,7 +101,7 @@
   }
 
   .wrap{
-    max-width: 980px;
+    max-width: 1250px;
     margin: 0 auto;
     padding: 32px 20px 60px;
   }
@@ -494,7 +494,7 @@
     font-family: var(--font-display);
     font-size: 34px;
     font-weight: 700;
-    color: rgb(14, 92, 66);
+    color: var(--accent-teal);
     line-height:1;
     margin-bottom: 10px;
   }
