@@ -1,0 +1,25 @@
+{
+  "name": "calend",
+  "version": "1.0.0",
+  "description": "A Web Application that makes sharing your plan on calendar easier and more convenient.",
+  "main": "calendarBackEnd.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsphatto/Calend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/itsphatto/Calend/issues"
+  },
+  "homepage": "https://github.com/itsphatto/Calend#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0"
+  }
+}
