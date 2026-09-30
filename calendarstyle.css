@@ -1,51 +1,57 @@
 :root{
-    --paper: #EDF1F4;
-    --paper-line: #DCE4EA;
-    --ink: #1E2A35;
-    --ink-soft: #5B6B76;
-    --ink-faint: #93A2AC;
-    --card: #FFFFFF;
-    --card-border: #DCE3E9;
-    --accent-gold: #E2A33D;
-    --accent-gold-deep: #C98620;
-    --accent-teal: #2F6B5C;
-    --accent-teal-deep: #234F44;
-    --danger: #C1503B;
-    --shadow-pin: 0 2px 5px rgba(30,42,53,0.18);
-    --warn-bg: #FFF7E8;
-    --warn-border: #F0DDAE;
-    --warn-error-bg: #FCEBE7;
-    --warn-error-border: #EBC3B8;
-    --toast-bg: #1E2A35;
-    --toast-ink: #F5F7F8;
-    --overlay-bg: rgba(20,28,35,0.38);
-    --font-display: 'Fraunces', Georgia, 'Iowan Old Style', serif;
-    --font-body: 'Inter', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  }
+  color-scheme: light;
+  --paper: #EDF1F4;
+  --paper-line: #DCE4EA;
+  --ink: #1E2A35;
+  --ink-soft: #5B6B76;
+  --ink-faint: #667782;
+  --card: #FFFFFF;
+  --card-border: #DCE3E9;
+  --accent-gold: #E2A33D;
+  --accent-gold-deep: #C98620;
+  --accent-teal: #2F6B5C;
+  --accent-teal-deep: #234F44;
+  --danger: #C1503B;
+  --shadow-pin: 0 2px 5px rgba(30,42,53,0.18);
+  --warn-bg: #FFF7E8;
+  --warn-border: #F0DDAE;
+  --warn-error-bg: #FCEBE7;
+  --warn-error-border: #EBC3B8;
+  --toast-bg: #1E2A35;
+  --toast-ink: #F5F7F8;
+  --overlay-bg: rgba(20,28,35,0.22);
+  --bg-dot: rgba(30,42,53,0.10);
+  --bg-glow: rgba(47,107,92,0.09);
+  --font-display: 'Fraunces', Georgia, 'Iowan Old Style', serif;
+  --font-body: 'Inter', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
 
-  html[data-theme="dark"]{
-    --paper: #171D22;
-    --paper-line: #232B31;
-    --ink: #E7ECEE;
-    --ink-soft: #99A5AB;
-    --ink-faint: #5E6A70;
-    --card: #1F262B;
-    --card-border: #2C353B;
-    --accent-gold: #E8B04F;
-    --accent-gold-deep: #C98620;
-    --accent-teal: #4CA88E;
-    --accent-teal-deep: #397E69;
-    --danger: #DE7A63;
-    --shadow-pin: 0 2px 6px rgba(0,0,0,0.4);
-    --warn-bg: #2B2718;
-    --warn-border: #4A4126;
-    --warn-error-bg: #2E2019;
-    --warn-error-border: #4F3128;
-    --toast-bg: #E7ECEE;
-    --toast-ink: #171D22;
-    --overlay-bg: rgba(0,0,0,0.55);
-  }
+html[data-theme="dark"]{
+  color-scheme: dark;
+  --paper: #171D22;
+  --paper-line: #232B31;
+  --ink: #E7ECEE;
+  --ink-soft: #99A5AB;
+  --ink-faint: #85939A;
+  --card: #1F262B;
+  --card-border: #2C353B;
+  --accent-gold: #E8B04F;
+  --accent-gold-deep: #C98620;
+  --accent-teal: #4CA88E;
+  --accent-teal-deep: #397E69;
+  --danger: #DE7A63;
+  --shadow-pin: 0 2px 6px rgba(0,0,0,0.4);
+  --warn-bg: #2B2718;
+  --warn-border: #4A4126;
+  --warn-error-bg: #2E2019;
+  --warn-error-border: #4F3128;
+  --toast-bg: #E7ECEE;
+  --toast-ink: #171D22;
+  --overlay-bg: rgba(0,0,0,0.45);
+  --bg-dot: rgba(231,236,238,0.07);
+  --bg-glow: rgba(76,168,142,0.10);
+}
 
   html, body, #app, .day-cell, .panel, .modal, .notice-card, .profile-chip,
   .nav-btn, .jump-select, .conn-banner, .toast, .pin-tag{
@@ -63,6 +69,35 @@
 
   *{ box-sizing: border-box; }
 
+  /* FIX: keyboard focus visibility */
+  :focus-visible{
+    outline: 2px solid var(--accent-teal);
+    outline-offset: 2px;
+  }
+
+  /* FIX: form fields respect theme */
+  textarea, input[type="text"]{
+    background: var(--card);
+    color: var(--ink);
+  }
+
+  /* ---------- Animations (delete this block if you already define these elsewhere) ---------- */
+  @keyframes cellIn{
+    from{ opacity: 0; transform: translateY(6px); }
+    to{ opacity: 1; transform: none; }
+  }
+  @keyframes pinIn{
+    from{ opacity: 0; transform: rotate(var(--tag-rot, 0deg)) scale(.8); }
+    to{ opacity: 1; transform: rotate(var(--tag-rot, 0deg)) scale(1); }
+  }
+  @keyframes panelPop{
+    from{ opacity: 0; transform: translate(-50%,-50%) scale(.94); }
+    to{ opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  }
+  @keyframes spinIn{
+    from{ transform: rotate(-180deg) scale(.5); opacity: 0; }
+    to{ transform: none; opacity: 1; }
+  }
 
   html, body{
     margin:0; padding:0; height:100%;
@@ -72,12 +107,14 @@
   }
 
   body{
+    background-color: var(--paper);
     background-image:
-      linear-gradient(var(--paper-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
-    background-size: 28px 28px;
+      radial-gradient(ellipse 80% 45% at 50% -8%, var(--bg-glow), transparent 70%),
+      radial-gradient(circle, var(--bg-dot) 1.2px, transparent 1.4px);
+    background-size: 100% 100%, 24px 24px;
     background-attachment: fixed;
     min-height: 100vh;
+    min-height: 100dvh;
   }
 
   #app{
@@ -277,7 +314,8 @@
     font-size: 16px;
     cursor:pointer;
     display:flex; align-items:center; justify-content:center;
-    transition: transform .12s ease, background .15s ease;
+    /* FIX: keeps theme fade instead of overriding it */
+    transition: transform .12s ease, background-color .35s ease, color .35s ease, border-color .35s ease;
   }
   .nav-btn:hover{ background: var(--accent-teal); color:#fff; border-color: var(--accent-teal); }
   .nav-btn:active{ transform: scale(0.92); }
@@ -359,10 +397,14 @@
     animation-delay: calc(var(--i, 0) * 6ms);
     transition: box-shadow .15s ease, transform .1s ease, border-color .15s ease, background-color .35s ease;
   }
-  .day-cell:hover{
-    box-shadow: 0 3px 10px rgba(30,42,53,0.12);
-    transform: translateY(-1px);
-    border-color: var(--accent-teal);
+  /* FIX: hover only on devices that actually hover (no sticky hover on phones) */
+  @media (hover: hover){
+    .day-cell:hover{
+      box-shadow: 0 3px 10px rgba(30,42,53,0.12);
+      transform: translateY(-1px);
+      border-color: var(--accent-teal);
+    }
+    .day-cell:hover .empty-hint{ opacity: 1; color: var(--accent-teal); }
   }
   .day-cell.other-month{ opacity: 0.42; }
   .day-cell.is-today{
@@ -447,26 +489,25 @@
     opacity: 0;
     transition: opacity .15s ease;
   }
-  .day-cell:hover .empty-hint{ opacity: 1; color: var(--accent-teal); }
 
   .overlay{
-  position: fixed;
-  inset: 0;
-  z-index: 40;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
 
-  background: rgba(20, 28, 35, 0.22);
-  backdrop-filter: blur(7px) saturate(.85);
-  -webkit-backdrop-filter: blur(7px) saturate(.85);
+    background: var(--overlay-bg);      /* FIX: was hardcoded rgba */
+    backdrop-filter: blur(7px) saturate(.85);
+    -webkit-backdrop-filter: blur(7px) saturate(.85);
 
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .22s ease;
-}
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .22s ease;
+  }
 
   .overlay.show{
-  opacity: 1;
-  pointer-events: auto;
- }
+    opacity: 1;
+    pointer-events: auto;
+  }
 
   /* ---------- Day panel ---------- */
   .panel{
@@ -819,32 +860,33 @@
     .empty-hint{ opacity: 0.3; font-size: 18px; }
 
     .panel{
-  width: min(400px, calc(100vw - 24px));
-  max-width: none;
-  height: auto;
-  max-height: calc(100vh - 32px);
+      width: min(400px, calc(100vw - 24px));
+      max-width: none;
+      height: auto;
+      max-height: calc(100vh - 32px);
+      max-height: calc(100dvh - 32px);  /* FIX: mobile address bar */
 
-  top: 50%;
-  right: auto;
-  bottom: auto;
-  left: 50%;
+      top: 50%;
+      right: auto;
+      bottom: auto;
+      left: 50%;
 
-  border: 1px solid var(--card-border);
-  border-radius: 16px;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
 
-  transform: translate(-50%, -46%) scale(.98);
-  opacity: 0;
-  pointer-events: none;
+      transform: translate(-50%, -46%) scale(.98);
+      opacity: 0;
+      pointer-events: none;
 
-  transition:
-    transform .28s cubic-bezier(.22,1,.36,1),
-    opacity .2s ease;
-}
+      transition:
+        transform .28s cubic-bezier(.22,1,.36,1),
+        opacity .2s ease;
+    }
 
-.panel.open{
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
-  pointer-events: auto;
-}
+    .panel.open{
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
     .title-block h1{ font-size: 26px; }
-  } 
+  }
