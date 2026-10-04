@@ -44,6 +44,12 @@ body {
   transition: background .3s, color .3s;
 }
 
+.bluetext {
+    color: rgb(61, 177, 245);
+    text-shadow: 0 0 8px rgba(166, 178, 194, 0.493);
+}
+
+
 /* ---------- top bar  ---------- */
 .bar {
   position: sticky;

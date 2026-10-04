@@ -450,8 +450,8 @@ html[data-theme="dark"]{
   }
   .day-cell.other-month{ opacity: 0.42; }
   .day-cell.is-today{
-    border-color: var(--accent-gold);
-    box-shadow: 0 0 0 2px rgba(226,163,61,0.35);
+    border-color: rgb(61, 177, 245);
+    
   }
   .day-cell.selected{
     border-color: var(--accent-teal);
@@ -474,7 +474,7 @@ html[data-theme="dark"]{
     color: var(--ink-soft);
   }
   .is-today .day-num{
-    background: var(--accent-gold);
+    background: rgb(131, 205, 248);
     color: #3A2600;
     border-radius: 6px;
     padding: 0px 6px;
@@ -537,7 +537,7 @@ html[data-theme="dark"]{
     inset: 0;
     z-index: 40;
 
-    background: var(--overlay-bg);      /* FIX: was hardcoded rgba */
+    background: var(--overlay-bg);     
     backdrop-filter: blur(7px) saturate(.85);
     -webkit-backdrop-filter: blur(7px) saturate(.85);
 

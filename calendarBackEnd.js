@@ -16,7 +16,7 @@
   // ======================================================================
 
   const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-  const NOTE_MAX_LEN = 20;
+  const NOTE_MAX_LEN = 100;
   const WEEKDAY_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
   const PRESET_COLORS = ["#E2A33D","#2F6B5C","#C1503B","#3B6EA8","#8A5FBF","#3E9C6E","#D46FA0","#C77A2B","#4C8FA0","#7A6BC7"];
 

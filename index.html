@@ -21,7 +21,6 @@
     try {
     const params = new URLSearchParams(location.search);
     if (params.has('home')) {
-      // came from a "home" click: stay here for this tab
       sessionStorage.setItem('calend-stay-home', '1');
       history.replaceState({}, '', location.pathname);
     } else if (!sessionStorage.getItem('calend-stay-home')) {
@@ -61,8 +60,7 @@
     </div>
   </header>
 
-  <maintextpart>
-
+ 
     <section class="showcase" id="showcase">
       <div class="sticky">
         <section class="hero">
@@ -79,7 +77,7 @@
 
                 <span class="calendarWord">Calendar</span>
               </h1>
-              <p class="sub">For You and For Free</p>
+              <p class="sub">For <span class="bluetext">You</span>  For <span class="bluetext">Free</span></p>
         
               <div class="heroActions">
                 <a href="calendar.html" class="getstartedbutton">Get Started</a>
