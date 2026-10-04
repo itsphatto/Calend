@@ -1324,3 +1324,8 @@ html[data-theme="dark"]{
   .terms-doc{ margin: 0 20px; height: 220px; }
   .terms-checks{ padding: 16px 20px 0; }
 }
+
+#deleteBoardBtn:hover{ border-color: var(--danger); color: var(--danger); }
+.gate-leave{ background: none; font-family: var(--font-body); cursor: pointer; }
+.gate-modal .btn-primary.danger-btn{ background: var(--danger); color: #fff; }
+.gate-modal .btn-primary.danger-btn:hover:not(:disabled){ background: #8f3626; }

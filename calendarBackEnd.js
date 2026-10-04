@@ -27,6 +27,7 @@
     groupId: null,
     profile: null,
     uid: null,
+    boardCreator: null,
     monthData: {},
     selectedDate: null,
     editingId: null
@@ -264,12 +265,35 @@
   async function claimBoard(code){
     try{
       if(await boardExists(code)) return 'taken';
-      const res = await db.ref(`boards/${code}`).transaction(cur => (cur === null ? { createdAt: Date.now() } : undefined));
+      const res = await db.ref(`boards/${code}`).transaction(cur => (cur === null ? { createdAt: Date.now(), creatorUid: state.uid } : undefined));
       return res.committed ? 'ok' : 'taken';
     }catch(e){
       console.error('Could not create board', e);
       return 'error';
     }
+  }
+
+  // Only the board's creator (matched by anonymous uid) sees the delete button.
+  // Boards created before this feature have no creatorUid, so nobody can delete
+  // them from the UI (remove those from the Firebase console).
+  function renderDeleteButton(){
+    const btn = $("deleteBoardBtn");
+    if(!btn) return;
+    const mine = !!(state.uid && state.boardCreator && state.boardCreator === state.uid);
+    btn.style.display = mine ? 'flex' : 'none';
+  }
+
+  async function loadBoardMeta(){
+    state.boardCreator = null;
+    if(firebaseReady && state.groupId){
+      try{
+        const snap = await db.ref(`boards/${state.groupId}/creatorUid`).once('value');
+        state.boardCreator = snap.val() || null;
+      }catch(e){
+        console.error('Could not load board info', e);
+      }
+    }
+    renderDeleteButton();
   }
 
   function setGateTab(tab){
@@ -1151,11 +1175,16 @@
   $("panelClose").addEventListener('click', closeDayPanel);
   overlay.addEventListener('click', () => {
     if($("termsModal").classList.contains('show')) return;   // terms gate can't be dismissed by clicking outside
+    if($("deleteModal") && $("deleteModal").classList.contains('show')) return;   // delete dialog closes via Cancel/Escape only
     closeDayPanel();
     if(groupModal.dataset.forced !== '1') closeProfileModal();
   });
   document.addEventListener('keydown', (e) => {
     if($("termsModal").classList.contains('show')) return;   // ...or with Escape
+    if($("deleteModal") && $("deleteModal").classList.contains('show')){
+      if(e.key === 'Escape') closeDeleteModal();
+      return;
+    }
     if(e.key === 'Escape'){
       closeDayPanel();
       if(profileModal.dataset.forced !== '1' && groupModal.dataset.forced !== '1') closeProfileModal();
@@ -1190,6 +1219,78 @@
   window.addEventListener("storage", (event) => {
     if (event.key === themeStorageKey) applyTheme(event.newValue);
   });
+
+  // ---------- Delete board (creator only) ----------
+  const deleteModal = $("deleteModal");
+  const deleteInput = $("deleteConfirmInput");
+  const deleteConfirmBtn = $("deleteConfirmBtn");
+  const deleteError = $("deleteError");
+
+  function setDeleteError(msg){
+    deleteError.textContent = msg || '';
+    deleteError.classList.toggle('show', !!msg);
+  }
+
+  function openDeleteModal(){
+    if(!state.groupId) return;
+    closeDayPanel();
+    $("deleteCodeHint").textContent = state.groupId;
+    deleteInput.value = '';
+    deleteConfirmBtn.disabled = true;
+    deleteConfirmBtn.textContent = 'Delete board';
+    setDeleteError('');
+    deleteModal.classList.add('show');
+    overlay.classList.add('show');
+    deleteInput.focus();
+  }
+
+  function closeDeleteModal(){
+    deleteModal.classList.remove('show');
+    overlay.classList.remove('show');
+  }
+
+  async function deleteBoard(){
+    const code = state.groupId;
+    if(!firebaseReady || !code) return;
+    deleteConfirmBtn.disabled = true;
+    deleteConfirmBtn.textContent = 'Deleting…';
+    setDeleteError('');
+
+    detachAllMonthListeners();
+    try{
+      // One atomic write: all notices and the board record go together or not at all.
+      const updates = {};
+      updates[`notices/${code}`] = null;
+      updates[`boards/${code}`] = null;
+      await db.ref().update(updates);
+    }catch(e){
+      console.error('Failed to delete board', e);
+      setDeleteError(e && e.code === 'PERMISSION_DENIED'
+        ? 'Only the board creator can delete this board.'
+        : "Couldn't delete the board. Check your connection and try again.");
+      deleteConfirmBtn.textContent = 'Delete board';
+      deleteConfirmBtn.disabled = deleteInput.value.trim().toUpperCase() !== code;
+      renderMonth();   // re-attach the listeners we detached
+      return;
+    }
+
+    removeRecentGroup(code);
+    try{ sessionStorage.setItem('calend-stay-home', '1'); }catch(e){}
+    location.href = 'index.html?home';
+  }
+
+  if($("deleteBoardBtn")){
+    $("deleteBoardBtn").addEventListener('click', openDeleteModal);
+    $("deleteCancelBtn").addEventListener('click', closeDeleteModal);
+    deleteInput.addEventListener('input', () => {
+      setDeleteError('');
+      deleteConfirmBtn.disabled = deleteInput.value.trim().toUpperCase() !== state.groupId;
+    });
+    deleteInput.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' && !deleteConfirmBtn.disabled) deleteBoard();
+    });
+    deleteConfirmBtn.addEventListener('click', deleteBoard);
+  }
 
   // ---------- "Stay on landing page" flag ----------
   // Clear the flag when we're on the board page,
@@ -1273,6 +1374,7 @@
     if(firebaseReady){
       await ensureSignedIn();   // must happen before any database read or write
       await resolveGroup();
+      await loadBoardMeta();
     }else{
       $("boardCodeWrap").style.display = 'none';
     }
