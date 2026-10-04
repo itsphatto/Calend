@@ -8,12 +8,13 @@
   --bar-bg: #1a1919;        /* NEW: top bar color */
   --btn-bg: #ffffff;
   --btn-fg: #000000;
-  --font: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --text-color: #222;
   --secondary-text: #777;
   --cta-background: #f5f9ff;
   --border-color: #e3edf8;
   --accent-color: #4da3ff;
+  
 }
 
 [data-theme="light"] {
@@ -326,6 +327,7 @@ h1 {
   font-size: 14px;
   color: var(--muted);
   margin-top: 12px;
+  margin-bottom: 15px;
 }
 
 
