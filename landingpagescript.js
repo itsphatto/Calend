@@ -201,13 +201,12 @@ const HOLD = 4000;   // how long "The Shared Calendar" stays before the animatio
 const CYCLE = 9500;  // total loop length
 
 function animateTitle() {
-
     // Reset
     sharedWord.classList.remove("strike");
     calendarWord.classList.remove("blue");
     calendarWord.textContent = "Calendar";
 
-    // Cross out Shared and dim it
+    // Cross out Shared, dim it, and make it italic
     setTimeout(() => {
         sharedWord.classList.add("strike");
     }, HOLD);
@@ -229,5 +228,4 @@ function animateTitle() {
 }
 
 animateTitle();
-
 setInterval(animateTitle, CYCLE);

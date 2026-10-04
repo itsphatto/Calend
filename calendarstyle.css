@@ -1127,7 +1127,7 @@ html[data-theme="dark"]{
     color: var(--ink);
     background: var(--paper);
     border: 1px solid var(--card-border);
-    border-left: 4px solid var(--accent-teal);
+    border-left: 4px solid rgb(170, 210, 233);
     border-radius: 12px;
     cursor: pointer;
     font-family: var(--font-body);
