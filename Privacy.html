@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy — Calend</title>
+  <link rel="stylesheet" href="landingpage.css">
+  <link rel="icon" type="image/svg+xml" href="/assets/CalendLogo.svg">
+  <style>
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 60px 20px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--fg);
+    }
+    h1 { font-size: 32px; margin-bottom: 8px; }
+    .updated { color: var(--muted); font-size: 14px; margin-bottom: 40px; }
+    h2 { font-size: 20px; margin-top: 32px; margin-bottom: 12px; font-weight: 600; }
+    p { margin-bottom: 16px; }
+    ul { margin-left: 20px; margin-bottom: 16px; }
+    li { margin-bottom: 8px; }
+    a { color: #4da3ff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .back { margin-top: 40px; }
+    .back a { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header class="bar">
+    <div class="innerbar">
+      <span class="brand">
+        <img src="/assets/CalendLogo.png" alt="Calend logo">
+        Calend
+      </span>
+    </div>
+  </header>
+
+  <main>
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: October 2026</p>
+
+    <h2>What we collect</h2>
+    <p>When you use Calend, we store:</p>
+    <ul>
+      <li><strong>Board code:</strong> the 8-character code that identifies your shared calendar</li>
+      <li><strong>Your name and color:</strong> what you choose to show on your notes</li>
+      <li><strong>Notes you write:</strong> the text and timestamp of anything you pin to a day</li>
+      <li><strong>Display preferences:</strong> whether you prefer light or dark mode</li>
+    </ul>
+    <p>We do <strong>not</strong> collect your email, phone number, location, or any identifying information beyond what you provide.</p>
+
+    <h2>Where it's stored</h2>
+    <p><strong>On your device:</strong> Your theme preference, profile (name and color), and recent boards are saved in your browser's local storage. Only your device can access this.</p>
+    <p><strong>In Firebase:</strong> The board code, notes, names, and colors are stored in Firebase Realtime Database so other people on the board can see them. Anyone with the board code can view and edit everything on that board.</p>
+
+    <h2>Who can see your data</h2>
+    <ul>
+      <li>Only people with your board code can see the notes on that board</li>
+      <li>Calend itself (the developer) cannot see your notes or boards</li>
+      <li>Firebase (Google) can technically access the database, but treats it as encrypted data in transit and at rest</li>
+    </ul>
+
+    <h2>Data deletion</h2>
+    <p>Notes are deleted when you or anyone on the board removes them. If you want a board and all its notes deleted, email me with the board code. Local data on your device is deleted when you clear your browser cache.</p>
+
+    <h2>Third-party services</h2>
+    <p>Calend uses <strong>Firebase Realtime Database</strong> (by Google) to sync boards. Firebase has its own <a href="https://firebase.google.com/support/privacy" target="_blank">privacy policy</a>.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>If this policy changes, the "Last updated" date will change. Check back occasionally.</p>
+
+    <h2>Questions?</h2>
+    <p></a>Email me at <a href="mailto:itsphatto@icloud.com">itsphatto@icloud.com</a> or open an issue on <a href="https://github.com/itsphatto/Calend/issues" target="_blank">GitHub</a>.</p>
+
+    <div class="back">
+      <a href="index.html">← Back to home</a>
+    </div>
+  </main>
+
+  <script src="landingpagescript.js"></script>
+</body>
+</html>
