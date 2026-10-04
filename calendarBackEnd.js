@@ -1,10 +1,8 @@
 (function(){
   // ======================================================================
-  // FIREBASE CONFIG — paste your own project's config object below.
-  // Get this from: Firebase Console > Project Settings > General >
-  // "Your apps" > Web app (</>) > SDK setup and configuration.
-  // Until you paste real values here, the app runs in local preview mode:
-  // notices only live in this browser tab and won't be shared or saved.
+  // FIREBASE CONFIG
+  // (This config is public by design. Security comes from your database
+  // rules, API key restrictions and App Check, not from hiding this.)
   // ======================================================================
   const firebaseConfig = {
     apiKey: "AIzaSyC3Sm_VhUTcoaAy6xLUJ9H4f6htVtwV9AA",
@@ -25,10 +23,11 @@
   const today = new Date();
   const state = {
     year: today.getFullYear(),
-    month: today.getMonth(), 
+    month: today.getMonth(),
     groupId: null,
     profile: null,
-    monthData: {},   
+    uid: null,
+    monthData: {},
     selectedDate: null,
     editingId: null
   };
@@ -67,7 +66,7 @@
     showToast._t = setTimeout(()=> toastEl.classList.remove('show'), 2200);
   }
 
- 
+
   let db = null;
   let firebaseReady = false;
   try{
@@ -97,8 +96,31 @@
     connBanner.classList.add('error');
   }
 
- 
-  const GROUP_CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // 
+  // ---------- Anonymous sign-in ----------
+  // Every visitor gets a private, persistent anonymous uid (no account needed).
+  // The database rules use it for ownership and for rate limiting.
+  async function ensureSignedIn(){
+    if(!firebaseReady) return null;
+    try{
+      const auth = firebase.auth();
+      let user = await new Promise((resolve) => {
+        const unsub = auth.onAuthStateChanged((u) => { unsub(); resolve(u); });
+      });
+      if(!user){
+        const cred = await auth.signInAnonymously();
+        user = cred.user;
+      }
+      state.uid = user ? user.uid : null;
+      return state.uid;
+    }catch(e){
+      console.error('Anonymous sign-in failed', e);
+      showConnError('sign-in failed (' + (e.message || e.code || 'unknown') + ')');
+      return null;
+    }
+  }
+
+
+  const GROUP_CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 
   function generateGroupCode(len){
     len = len || 8;
@@ -450,8 +472,12 @@
   $("profileCancelBtn").addEventListener('click', closeProfileModal);
   $("setupLink").addEventListener('click', ()=> openProfileModal(false));
 
-  async function recolorMyNotices(name, newColor){
-   
+  // Recolors only notices that belong to this browser's anonymous uid
+  // (the database rules reject edits to anyone else's notices anyway).
+  async function recolorMyNotices(newColor){
+    const uid = state.uid;
+    if(!uid) return 0;
+
     let localMatches = 0;
     Object.keys(state.monthData).forEach(mKey => {
       const monthObj = state.monthData[mKey] || {};
@@ -459,7 +485,7 @@
         const dayObj = monthObj[dateKey] || {};
         Object.keys(dayObj).forEach(noticeId => {
           const n = dayObj[noticeId];
-          if(n && n.name === name && n.color !== newColor){
+          if(n && n.uid === uid && n.color !== newColor){
             n.color = newColor;
             localMatches++;
           }
@@ -479,7 +505,7 @@
           const dayObj = monthObj[dateKey] || {};
           Object.keys(dayObj).forEach(noticeId => {
             const n = dayObj[noticeId];
-            if(n && n.name === name && n.color !== newColor){
+            if(n && n.uid === uid && n.color !== newColor){
               updates[`notices/${state.groupId}/${mKey}/${dateKey}/${noticeId}/color`] = newColor;
             }
           });
@@ -514,7 +540,7 @@
 
     if(sameName && colorChanged){
       showToast('Updating your existing notices…');
-      const count = await recolorMyNotices(name, color);
+      const count = await recolorMyNotices(color);
       showToast(count > 0 ? `Recolored ${count} existing notice${count===1?'':'s'}.` : 'Color saved.');
     }else{
       showToast(ok ? 'Profile saved on this browser.' : 'Could not save profile locally.');
@@ -557,7 +583,7 @@
           first = false;
           resolve(data);
         }else{
-          
+
           if(key === monthKey(state.year, state.month)){
             renderGrid();
             renderLegend();
@@ -572,6 +598,7 @@
         }
       }, (err) => {
         console.error('Firebase read failed', err);
+        listenedMonths.delete(key);
         showConnError(err.message || 'could not read notices');
         if(first){ first = false; resolve({}); }
       });
@@ -591,7 +618,7 @@
     return list;
   }
 
- 
+
   function populateSelects(){
     const monthSel = $("monthSelect");
     monthSel.innerHTML = '';
@@ -640,7 +667,7 @@
 
   if(document.fonts && document.fonts.ready){ document.fonts.ready.then(fitDateSelects); }
 
-  
+
   async function renderMonth(){
     await loadMonth(state.year, state.month);
     syncSelects();
@@ -664,7 +691,7 @@
     people.forEach((color, name) => {
       const span = document.createElement('span');
       span.className = 'tag';
-      span.innerHTML = `<span class="dot" style="background:${color}"></span>${escapeHtml(name)}`;
+      span.innerHTML = `<span class="dot" style="background:${escapeHtml(color)}"></span>${escapeHtml(name)}`;
       legend.appendChild(span);
     });
   }
@@ -755,7 +782,7 @@
     }
   }
 
-  
+
   async function openDayPanel(y, m, d, ds){
     state.selectedDate = ds;
     state.editingId = null;
@@ -775,6 +802,13 @@
     state.selectedDate = null;
     state.editingId = null;
     renderGrid();
+  }
+
+  function isMyNotice(n){
+    // Ownership is the anonymous uid, matching what the database rules enforce.
+    // Local preview mode (no Firebase) has no uid, so fall back to the name.
+    if(firebaseReady) return !!(state.uid && n.uid && n.uid === state.uid);
+    return !!(state.profile && n.name === state.profile.name);
   }
 
   function renderPanel(ds, yArg, mArg){
@@ -801,13 +835,13 @@
       card.dataset.noticeId = n.id;
       card.style.borderLeftColor = n.color;
 
-      const isMine = state.profile && n.name === state.profile.name;
+      const isMine = isMyNotice(n);
       const editedTag = n.updatedAt && n.updatedAt !== n.createdAt ? ' · edited' : '';
 
       if(state.editingId === n.id){
         card.innerHTML = `
           <div class="meta">
-            <span class="author"><span class="dot" style="background:${n.color}"></span>${escapeHtml(n.name)}</span>
+            <span class="author"><span class="dot" style="background:${escapeHtml(n.color)}"></span>${escapeHtml(n.name)}</span>
             <span class="char-counter" id="editCounter_${n.id}">${n.text.length}/${NOTE_MAX_LEN}</span>
           </div>
           <div class="edit-area">
@@ -822,7 +856,7 @@
         card.innerHTML = `
           <div class="meta">
             <span class="drag-handle" title="Drag to reorder">⠿</span>
-            <span class="author"><span class="dot" style="background:${n.color}"></span>${escapeHtml(n.name)}</span>
+            <span class="author"><span class="dot" style="background:${escapeHtml(n.color)}"></span>${escapeHtml(n.name)}</span>
             ${isMine ? `<span class="actions">
               <button class="icon-btn" data-edit="${n.id}" title="Rename / edit">✎</button>
               <button class="icon-btn danger" data-del="${n.id}" title="Delete">🗑</button>
@@ -892,28 +926,60 @@
     }
   }
 
+  // Returns true if the notice was saved, false if it was rejected
+  // (for example by the 3-second rate limit in the database rules).
   async function addNotice(y, m, ds, text){
     const key = monthKey(y, m);
     const id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())+Math.random().toString(16).slice(2));
+    const now = Date.now();
     const notice = {
       name: state.profile.name,
       color: state.profile.color,
       text: text,
-      createdAt: Date.now(),
-      updatedAt: Date.now()
+      createdAt: now,
+      updatedAt: now
     };
+    if(state.uid) notice.uid = state.uid;
 
+    if(!firebaseReady){
+      // local preview only
+      if(!state.monthData[key]) state.monthData[key] = {};
+      if(!state.monthData[key][ds]) state.monthData[key][ds] = {};
+      state.monthData[key][ds][id] = notice;
+      return true;
+    }
+
+    if(!state.uid){
+      showConnError('you are not signed in yet, please reload the page');
+      return false;
+    }
+
+    // Optimistic local add so the UI feels instant
     if(!state.monthData[key]) state.monthData[key] = {};
     if(!state.monthData[key][ds]) state.monthData[key][ds] = {};
     state.monthData[key][ds][id] = notice;
 
-    if(firebaseReady){
-      try{
-        await db.ref(`notices/${state.groupId}/${key}/${ds}/${id}`).set(notice);
-      }catch(e){
-        console.error('Failed to save notice', e);
+    // Create the notice and bump the per-user rate-limit stamp in ONE atomic
+    // write. The rules reject it if the previous stamp is less than 3s old.
+    const TS = firebase.database.ServerValue.TIMESTAMP;
+    const updates = {};
+    updates[`notices/${state.groupId}/${key}/${ds}/${id}`] =
+      Object.assign({}, notice, { uid: state.uid, createdAt: TS, updatedAt: TS });
+    updates[`rateLimit/${state.uid}`] = TS;
+
+    try{
+      await db.ref().update(updates);
+      return true;
+    }catch(e){
+      console.error('Failed to save notice', e);
+      // roll back the optimistic add
+      if(state.monthData[key] && state.monthData[key][ds]) delete state.monthData[key][ds][id];
+      if(e && e.code === 'PERMISSION_DENIED'){
+        showToast('Slow down, wait a few seconds and try again.');
+      }else{
         showConnError(e.message || 'could not save notice');
       }
+      return false;
     }
   }
 
@@ -928,7 +994,8 @@
         await db.ref(`notices/${state.groupId}/${key}/${ds}/${id}`).update(updates);
       }catch(e){
         console.error('Failed to edit notice', e);
-        showConnError(e.message || 'could not save edit');
+        if(e && e.code === 'PERMISSION_DENIED') showToast('You can only edit your own notices.');
+        else showConnError(e.message || 'could not save edit');
       }
     }
   }
@@ -936,6 +1003,7 @@
   async function deleteNotice(y, m, ds, id){
     const key = monthKey(y, m);
     const dayObj = (state.monthData[key] && state.monthData[key][ds]) || {};
+    const backup = dayObj[id];
     delete dayObj[id];
 
     if(firebaseReady){
@@ -943,12 +1011,14 @@
         await db.ref(`notices/${state.groupId}/${key}/${ds}/${id}`).remove();
       }catch(e){
         console.error('Failed to delete notice', e);
-        showConnError(e.message || 'could not delete notice');
+        if(backup) dayObj[id] = backup;   // restore locally if the database refused
+        if(e && e.code === 'PERMISSION_DENIED') showToast('You can only delete your own notices.');
+        else showConnError(e.message || 'could not delete notice');
       }
     }
   }
 
-  // 
+  //
   let dragState = null;
 
   function getDragAfterElement(container, pointerY){
@@ -1023,21 +1093,32 @@
     }
   }
 
+  let pinBusy = false;
   $("pinBtn").addEventListener('click', async () => {
     if(!state.profile){ openProfileModal(false); return; }
+    if(pinBusy) return;
     const ta = $("newNoticeText");
     const text = ta.value.trim().slice(0, NOTE_MAX_LEN);
     if(!text){ showToast('Write something first.'); return; }
     const ds = state.selectedDate;
     const [yy, mm] = ds.split('-').map(Number);
-    await addNotice(yy, mm-1, ds, text);
-    ta.value = '';
-    $("newNoticeCounter").textContent = `0/${NOTE_MAX_LEN}`;
-    $("newNoticeCounter").classList.remove('limit');
+
+    pinBusy = true;
+    $("pinBtn").disabled = true;
+    const ok = await addNotice(yy, mm-1, ds, text);
+    pinBusy = false;
+    $("pinBtn").disabled = !state.profile;
+
+    if(ok){
+      ta.value = '';
+      $("newNoticeCounter").textContent = `0/${NOTE_MAX_LEN}`;
+      $("newNoticeCounter").classList.remove('limit');
+      showToast('Notice pinned.');
+    }
+    // on failure the text stays in the box so nothing is lost
     renderPanel(ds, yy, mm-1);
     renderGrid();
     renderLegend();
-    showToast('Notice pinned.');
   });
 
   $("newNoticeText").addEventListener('input', (e) => {
@@ -1047,7 +1128,7 @@
     counter.classList.toggle('limit', len >= NOTE_MAX_LEN);
   });
 
-  
+
   $("prevBtn").addEventListener('click', () => {
     state.month--;
     if(state.month < 0){ state.month = 11; state.year--; }
@@ -1069,19 +1150,19 @@
 
   $("panelClose").addEventListener('click', closeDayPanel);
   overlay.addEventListener('click', () => {
-    if($("termsModal").classList.contains('show')) return;   // NEW: terms gate can't be dismissed by clicking outside
+    if($("termsModal").classList.contains('show')) return;   // terms gate can't be dismissed by clicking outside
     closeDayPanel();
     if(groupModal.dataset.forced !== '1') closeProfileModal();
   });
   document.addEventListener('keydown', (e) => {
-    if($("termsModal").classList.contains('show')) return;   // NEW: ...or with Escape
+    if($("termsModal").classList.contains('show')) return;   // ...or with Escape
     if(e.key === 'Escape'){
       closeDayPanel();
       if(profileModal.dataset.forced !== '1' && groupModal.dataset.forced !== '1') closeProfileModal();
     }
   });
 
- 
+
   const lightBtn = $("buttonlightmode");
   const darkBtn = $("buttondarkmode");
 
@@ -1188,8 +1269,9 @@
     showConnBanner();
     populateSelects();
     syncSelects();
-    if(!termsAccepted()) await openTermsGate();   // NEW
+    if(!termsAccepted()) await openTermsGate();
     if(firebaseReady){
+      await ensureSignedIn();   // must happen before any database read or write
       await resolveGroup();
     }else{
       $("boardCodeWrap").style.display = 'none';
