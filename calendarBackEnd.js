@@ -496,11 +496,8 @@
   $("profileCancelBtn").addEventListener('click', closeProfileModal);
   $("setupLink").addEventListener('click', ()=> openProfileModal(false));
 
-  // Recolors only notices that belong to this browser's anonymous uid
-  // (the database rules reject edits to anyone else's notices anyway).
-  async function recolorMyNotices(newColor){
-    const uid = state.uid;
-    if(!uid) return 0;
+  // Recolors every notice on this board that carries the same name.
+  async function recolorMyNotices(name, newColor){
 
     let localMatches = 0;
     Object.keys(state.monthData).forEach(mKey => {
@@ -509,7 +506,7 @@
         const dayObj = monthObj[dateKey] || {};
         Object.keys(dayObj).forEach(noticeId => {
           const n = dayObj[noticeId];
-          if(n && n.uid === uid && n.color !== newColor){
+          if(n && sameName(n.name, name) && n.color !== newColor){
             n.color = newColor;
             localMatches++;
           }
@@ -529,7 +526,7 @@
           const dayObj = monthObj[dateKey] || {};
           Object.keys(dayObj).forEach(noticeId => {
             const n = dayObj[noticeId];
-            if(n && n.uid === uid && n.color !== newColor){
+            if(n && sameName(n.name, name) && n.color !== newColor){
               updates[`notices/${state.groupId}/${mKey}/${dateKey}/${noticeId}/color`] = newColor;
             }
           });
@@ -554,7 +551,7 @@
     const color = colorInput ? colorInput.value : PRESET_COLORS[0];
 
     const prevProfile = state.profile;
-    const sameName = prevProfile && prevProfile.name === name;
+    const keptName = prevProfile && prevProfile.name === name;
     const colorChanged = prevProfile && prevProfile.color !== color;
 
     state.profile = { name, color };
@@ -562,9 +559,9 @@
     closeProfileModal();
     const ok = saveProfileLocal(state.profile);
 
-    if(sameName && colorChanged){
+    if(keptName && colorChanged){
       showToast('Updating your existing notices…');
-      const count = await recolorMyNotices(color);
+      const count = await recolorMyNotices(name, color);
       showToast(count > 0 ? `Recolored ${count} existing notice${count===1?'':'s'}.` : 'Color saved.');
     }else{
       showToast(ok ? 'Profile saved on this browser.' : 'Could not save profile locally.');
@@ -828,11 +825,14 @@
     renderGrid();
   }
 
+  function sameName(a, b){
+    return String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
+  }
+
+  // Ownership is by NAME (trusted-group model): anyone on the board using the
+  // same name can edit/delete those notices, which makes switching devices easy.
   function isMyNotice(n){
-    // Ownership is the anonymous uid, matching what the database rules enforce.
-    // Local preview mode (no Firebase) has no uid, so fall back to the name.
-    if(firebaseReady) return !!(state.uid && n.uid && n.uid === state.uid);
-    return !!(state.profile && n.name === state.profile.name);
+    return !!(state.profile && sameName(n.name, state.profile.name));
   }
 
   function renderPanel(ds, yArg, mArg){
@@ -1018,7 +1018,7 @@
         await db.ref(`notices/${state.groupId}/${key}/${ds}/${id}`).update(updates);
       }catch(e){
         console.error('Failed to edit notice', e);
-        if(e && e.code === 'PERMISSION_DENIED') showToast('You can only edit your own notices.');
+        if(e && e.code === 'PERMISSION_DENIED') showToast('Could not save the edit.');
         else showConnError(e.message || 'could not save edit');
       }
     }
@@ -1036,7 +1036,7 @@
       }catch(e){
         console.error('Failed to delete notice', e);
         if(backup) dayObj[id] = backup;   // restore locally if the database refused
-        if(e && e.code === 'PERMISSION_DENIED') showToast('You can only delete your own notices.');
+        if(e && e.code === 'PERMISSION_DENIED') showToast('Could not delete the notice.');
         else showConnError(e.message || 'could not delete notice');
       }
     }
