@@ -559,7 +559,7 @@ h1 {
   width: 100%;
   height: 2px;
   background: var(--fg);
-  transition: transform 0.3s ease, background 0.2s;
+  
   
 }
 .faqIcon::after { transform: rotate(90deg); }
@@ -623,4 +623,27 @@ h1 {
 
 .FooterBar .divider {
     color: #aaa;
+}
+
+
+.barlinks {
+  display: flex;
+  gap: 20px;
+  margin-left: auto;   
+  margin-right: 20px;
+  font-size: 14px;
+}
+
+.barlinks a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.barlinks a:hover {
+  color: var(--fg);
+}
+
+@media (max-width: 520px) {
+  .barlinks { display: none; }
 }
