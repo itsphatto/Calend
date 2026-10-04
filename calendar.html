@@ -15,7 +15,6 @@
 <script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-auth-compat.js"></script>
 
-
 </head>
 <body>
 
@@ -31,10 +30,12 @@
       <button class="nav-btn" id="nextBtn" aria-label="Next month">›</button>
     </div>
   </div>
+
   <div class="board-code" id="boardCodeWrap" title="Board code">
     <span class="board-code-label">Board</span>
     <code id="boardCode">—</code>
   </div>
+
   <div class="bar-actions">
     <div class="themetoggle">
       <button class="theme-toggle" id="deleteBoardBtn" type="button" title="Delete this board" aria-label="Delete this board" style="display:none;">
@@ -47,16 +48,20 @@
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       </button>
     </div>
+
     <a class="theme-toggle" id="homeBtn" href="index.html?home" title="Home" aria-label="Home">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"></path><path d="M5 8.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V8.5"></path></svg>
     </a>
+
     <div class="profile-chip" id="profileChip" title="Click to change your name or color">
       <span class="profile-dot" id="profileDot"></span>
       <span class="name" id="profileName">Set up profile</span>
       <span class="edit-hint">✎</span>
     </div>
+
   </div>
-</div>
+
+</div> <!--END OF BAR DIV-->
 
 <div id="app">
   <div class="conn-banner" id="connBanner"></div>
@@ -84,8 +89,8 @@
     <div id="needProfileNote" class="need-profile-note" style="display:none;">
       Pick a name and color first — <a id="setupLink">set up your profile</a>.
     </div>
-    <label for="newNoticeText">Pin a new note <span id="newNoticeCounter" class="char-counter">0/20</span></label>
-    <textarea id="newNoticeText" maxlength="20" placeholder="Write something for this day..."></textarea>
+    <label for="newNoticeText">Pin a new note <span id="newNoticeCounter" class="char-counter">0/100</span></label>
+    <textarea id="newNoticeText" maxlength="100" placeholder="Pin something for this day..."></textarea>
     <button class="pin-btn" id="pinBtn">Pin note</button>
   </div>
 </div>
@@ -151,7 +156,7 @@
     <div class="gate-pane" data-pane="create">
       <div class="code-boxes" id="codeBoxes"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 1"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 2"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 3"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 4"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 5"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 6"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 7"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 8"></div>
       <div class="gate-create-row">
-        <p class="gate-hint">Type your own 8-character code (letters and numbers). Codes already in use are rejected.</p>
+        <p class="gate-hint">Type your own 8-character code. Codes already in use are rejected.</p>
         <button type="button" class="gate-random" id="randomCodeBtn">Randomize</button>
       </div>
     </div>

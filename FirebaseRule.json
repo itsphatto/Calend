@@ -1,0 +1,47 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "rateLimit": {
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.val() === now && (!data.exists() || newData.val() >= data.val() + 3000)"
+      }
+    },
+
+    "boards": {
+      "$code": {
+        ".read": "auth != null && $code.matches(/^[A-Z0-9]{8,10}$/)",
+        ".write": "auth != null && $code.matches(/^[A-Z0-9]{8,10}$/) && ((!data.exists() && newData.exists()) || (data.exists() && !newData.exists() && data.child('creatorUid').val() === auth.uid))",
+        ".validate": "newData.hasChildren(['createdAt','creatorUid'])",
+        "createdAt":  { ".validate": "newData.isNumber()" },
+        "creatorUid": { ".validate": "newData.val() === auth.uid" },
+        "$other":     { ".validate": false }
+      }
+    },
+
+"notices": {
+  "$code": {
+    ".read": "auth != null && $code.matches(/^[A-Z0-9]{8,10}$/)",
+    ".write": "auth != null && !newData.exists() && root.child('boards').child($code).child('creatorUid').val() === auth.uid",
+    "$month": {
+      "$date": {
+        "$id": {
+          ".write": "auth != null && root.child('boards').child($code).exists() && (data.exists() || (newData.child('uid').val() === auth.uid && newData.parent().parent().parent().parent().parent().child('rateLimit').child(auth.uid).val() === now))",
+          ".validate": "$month.matches(/^[0-9]{4}-[0-9]{2}$/) && $date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.hasChildren(['name','color','text','createdAt','updatedAt']) && (newData.hasChild('uid') || data.exists())",
+          "uid":       { ".validate": "newData.val() === auth.uid || data.exists()" },
+          "name":      { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 24" },
+          "color":     { ".validate": "newData.isString() && newData.val().matches(/^#[0-9A-Fa-f]{6}$/)" },
+          "text": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100" },
+          "createdAt": { ".validate": "newData.isNumber()" },
+          "updatedAt": { ".validate": "newData.isNumber()" },
+          "order":     { ".validate": "newData.isNumber()" },
+          "$other":    { ".validate": false }
+        }
+      }
+    }
+  }
+}
+  }
+}

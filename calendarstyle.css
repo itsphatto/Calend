@@ -439,7 +439,8 @@ html[data-theme="dark"]{
     animation-delay: calc(var(--i, 0) * 6ms);
     transition: box-shadow .15s ease, transform .1s ease, border-color .15s ease, background-color .35s ease;
   }
-  /* FIX: hover only on devices that actually hover (no sticky hover on phones) */
+
+
   @media (hover: hover){
     .day-cell:hover{
       box-shadow: 0 3px 10px rgba(30,42,53,0.12);
@@ -474,7 +475,7 @@ html[data-theme="dark"]{
     color: var(--ink-soft);
   }
   .is-today .day-num{
-    background: rgb(131, 205, 248);
+    background: rgb(119, 160, 227);
     color: #3A2600;
     border-radius: 6px;
     padding: 0px 6px;
@@ -953,9 +954,17 @@ html[data-theme="dark"]{
       grid-auto-rows: minmax(0, 1fr);
     }
     .day-cell{ min-height: 0; max-height: none; }
+
+    /* center the hover "+" in the whole cell */
+    .empty-hint{
+      position: absolute;
+      inset: 0;
+      line-height: 1;
+      pointer-events: none;
+    }
   }
 
-  /* ---------- Profile modal (refined) ---------- */
+  /* profile modal */
   .modal{
     width: 400px;
     padding: 28px;
@@ -1064,7 +1073,7 @@ html[data-theme="dark"]{
     .swatch, input[type="color"]{ width: 32px; height: 32px; }
   }
 
-  /* ---------- Private board gate ---------- */
+  /* Private board gate  */
   .modal.gate-modal{
     width: 520px;
     max-width: 92vw;
