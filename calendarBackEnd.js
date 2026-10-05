@@ -67,6 +67,20 @@
     showToast._t = setTimeout(()=> toastEl.classList.remove('show'), 2200);
   }
 
+  // Blocks mouse, keyboard (Tab/Enter) and screen readers on the page behind a gate
+  function setBackgroundInert(on){
+    $("app").inert = on;
+    const bar = document.querySelector('.bar');
+    if(bar) bar.inert = on;
+  }
+
+  // True while a modal that must not be dismissed is on screen
+  function gateIsOpen(){
+    return groupModal.classList.contains('show')
+      || (profileModal.classList.contains('show') && profileModal.dataset.forced === '1')
+      || $("termsModal").classList.contains('show');
+  }
+
 
   let db = null;
   let firebaseReady = false;
@@ -326,6 +340,7 @@
     overlay.classList.add('show');
     groupModal.dataset.forced = '1';
     $("app").classList.add('app-locked');
+    setBackgroundInert(true);
     document.body.style.overflow = 'hidden';
 
     const finish = (code) => {
@@ -338,6 +353,7 @@
       groupModal.classList.remove('show');
       groupModal.dataset.forced = '0';
       $("app").classList.remove('app-locked');
+      setBackgroundInert(false);
       document.body.style.overflow = '';
       if(!panel.classList.contains('open') && !profileModal.classList.contains('show')){
         overlay.classList.remove('show');
@@ -483,10 +499,13 @@
     profileModal.classList.add('show');
     overlay.classList.add('show');
     profileModal.dataset.forced = forced ? '1' : '0';
+    if(forced) setBackgroundInert(true);
     $("nameInput").focus();
   }
   function closeProfileModal(){
     profileModal.classList.remove('show');
+    profileModal.dataset.forced = '0';
+    setBackgroundInert(false);
     if(!panel.classList.contains('open') && !groupModal.classList.contains('show')) overlay.classList.remove('show');
   }
 
@@ -559,13 +578,9 @@
     closeProfileModal();
     const ok = saveProfileLocal(state.profile);
 
-    if(keptName && colorChanged){
-      showToast('Updating your existing notices…');
-      const count = await recolorMyNotices(name, color);
-      showToast(count > 0 ? `Recolored ${count} existing notice${count===1?'':'s'}.` : 'Color saved.');
-    }else{
-      showToast(ok ? 'Profile saved on this browser.' : 'Could not save profile locally.');
-    }
+    showToast('Saving…');
+    const count = await recolorMyNotices(name, color);
+    showToast(count > 0 ? `Recolored ${count} existing notice${count===1?'':'s'}.` : (ok ? 'Profile saved on this browser.' : 'Could not save profile locally.'));
 
     renderGrid();
     if(state.selectedDate) renderPanel(state.selectedDate);
@@ -1134,6 +1149,7 @@
     $("pinBtn").disabled = !state.profile;
 
     if(ok){
+      recolorMyNotices(state.profile.name, state.profile.color); // last pinner's color wins
       ta.value = '';
       $("newNoticeCounter").textContent = `0/${NOTE_MAX_LEN}`;
       $("newNoticeCounter").classList.remove('limit');
@@ -1173,21 +1189,25 @@
   });
 
   $("panelClose").addEventListener('click', closeDayPanel);
+
+  // Backdrop click: never dismisses a gate (terms / board / forced profile)
   overlay.addEventListener('click', () => {
-    if($("termsModal").classList.contains('show')) return;   // terms gate can't be dismissed by clicking outside
+    if(gateIsOpen()) return;
     if($("deleteModal") && $("deleteModal").classList.contains('show')) return;   // delete dialog closes via Cancel/Escape only
     closeDayPanel();
-    if(groupModal.dataset.forced !== '1') closeProfileModal();
+    closeProfileModal();
   });
+
+  // Escape: same rule
   document.addEventListener('keydown', (e) => {
-    if($("termsModal").classList.contains('show')) return;   // ...or with Escape
+    if(gateIsOpen()) return;
     if($("deleteModal") && $("deleteModal").classList.contains('show')){
       if(e.key === 'Escape') closeDeleteModal();
       return;
     }
     if(e.key === 'Escape'){
       closeDayPanel();
-      if(profileModal.dataset.forced !== '1' && groupModal.dataset.forced !== '1') closeProfileModal();
+      closeProfileModal();
     }
   });
 
@@ -1352,6 +1372,7 @@
         modal.dataset.forced = '0';
         overlay.classList.remove('show');
         $("app").classList.remove('app-locked');
+        setBackgroundInert(false);
         document.body.style.overflow = '';
         resolve();
       });
@@ -1360,6 +1381,7 @@
       modal.classList.add('show');
       overlay.classList.add('show');
       $("app").classList.add('app-locked');
+      setBackgroundInert(true);
       document.body.style.overflow = 'hidden';
       showDoc('privacy');
     });
