@@ -254,10 +254,10 @@ h1 {
 .recentBoardsDropdown {
   position: absolute;
   top: calc(100% + 8px);
-  right: 0;
+  right: -6px;
   background: var(--bar-bg);
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 24px;
   padding: 8px;
   min-width: 180px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
@@ -284,7 +284,26 @@ h1 {
 }
 .recentBoardsDropdown li:hover {
   background: var(--line);
+  border-radius: 6px;
 }
+
+/* invisible bridge so the mouse doesn't lose hover crossing the 8px gap */
+.recentBoardsDropdown::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+
+/* show on hover, only on devices that actually have hover */
+@media (hover: hover) {
+  .recentBoardsContainer:hover .recentBoardsDropdown {
+    display: flex;
+  }
+}
+
 .recentDeleteBtn {
   background: none;
   border: none;
