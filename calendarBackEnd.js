@@ -855,7 +855,7 @@
     const y = yArg!==undefined?yArg:yy, m = mArg!==undefined?mArg:(mm-1), d = dd;
     const dow = new Date(y, m, d).getDay();
     $("panelDate").textContent = `${WEEKDAY_NAMES[dow]}, ${MONTH_NAMES[m]} ${d}`;
-    $("panelEyebrow").textContent = `Notices for ${y}`;
+    $("panelEyebrow").textContent = `Notes for ${y}`;
 
     const list = noticesFor(y, m, ds);
     const body = $("panelBody");
@@ -864,7 +864,7 @@
     if(list.length === 0){
       const empty = document.createElement('div');
       empty.className = 'empty-day';
-      empty.textContent = 'No notices pinned yet. Be the first!';
+      empty.textContent = 'No notes pinned yet. Be the first!';
       body.appendChild(empty);
     }
 
