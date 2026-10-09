@@ -14,6 +14,8 @@
   --cta-background: #f5f9ff;
   --border-color: #e3edf8;
   --accent-color: #4da3ff;
+  --section-bg: #0e0e10;  
+  --card-bg: #1c1c1f;  
   
 }
 
@@ -23,10 +25,12 @@
   --muted: #6b6b70;
   --tab: #e6e6e9;
   --line: #e0e0e3;
-  --bar-bg: #e3e3eb;
+  --bar-bg: #ffffff;
   --btn-bg: #000000;
   --btn-fg: #ffffff;
   --bar-getstartedbutton-bg:#1486ff;
+  --section-bg: #f5f5f7;   
+  --card-bg: #ffffff; 
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -94,11 +98,11 @@ body {
 .bar.scrolled .innerbar {
   max-width: min(860px, calc(100% - 24px));
   padding: 0 24px;
-  transform: translateY(12px);     /* transform = no layout shift */
-  border-radius: 22px;
+  transform: translateY(12px);    /* transform = no layout shift */
+  border-radius: 20px;
   background: color-mix(in srgb, var(--bar-bg) 82%, transparent);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  backdrop-filter: blur(1.5px) saturate(1.2);
+  -webkit-backdrop-filter: blur(0.8px) saturate(1.2);
+  backdrop-filter: blur(0.8px) saturate(1.2);
   border-color: var(--line);
   box-shadow: 0 8px 30px rgba(0, 0, 0, .35);
   pointer-events: auto;
@@ -421,7 +425,7 @@ h1 {
   --fx: .6;    --fy: .6;     /* crop size as a fraction of the full image */
   height: calc(100vh - 66px + 400px);   /* 400px of scrolling = the expansion (raise = more wheel clicks) */
   position: relative;
-  margin-bottom: var(--over, 0px);   /* space for the image hanging below the screen */
+  margin-bottom: max(0px, var(--over, 0px));  /* space for the image hanging below the screen */
 }
 
 .sticky {
@@ -581,19 +585,108 @@ h1 {
   background: rgba(236, 53, 53, 0.35);
 }
 
-/* How it work */
-.howItWorks {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 80px 20px 60px;
+.showcaseGap {
+  height: 120px;
 }
 
-.howItWorks h2 {
-  font-size: clamp(28px, 4vw, 40px);
+@media (max-width: 700px) {
+  .showcaseGap { height: 64px; }
+}
+
+.howBand {
+  background: var(--section-bg);
+  margin-top: 25px;        /* space above the band */
+  margin-bottom: 80px;  /* space below the band, before the footer */
+  transition: background .3s;
+  /* optional rounded, floating look: */
+  /* margin-inline: 16px; border-radius: 32px; */
+}
+
+.howSteps {
+  --steps: 3;
+  position: relative;
+  height: calc(100vh + (var(--steps) - 1) * 70vh);
+  /* background removed from here */
+}
+
+.howCard {
+  background: var(--card-bg);  
+  border: none;               
+  transition: background .3s;
+}
+
+.howSticky {
+  position: sticky;
+  top: 66px;
+  height: calc(100vh - 66px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  overflow: hidden;
+}
+
+.howStepsTitle {
+  width: 100%;
+  max-width: 1232px;
+  margin: 0 auto;
+  padding: 0 16px;
+  font-size: clamp(32px, 5vw, 56px);
   font-weight: 700;
   letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.howTrack {
+  display: flex;
+  gap: 24px;
+  /* first card lines up with the title / logo edge */
+  padding-left: calc((100vw - min(100vw, 1232px)) / 2 + 16px);
+  padding-right: 16px;
+  will-change: transform;
+}
+
+.howCard {
+  flex: 0 0 min(900px, 82vw);
+  height: min(560px, calc(100vh - 66px - 160px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  margin-bottom: 40px;
+  padding: 36px 24px 0;
+  background: var(--bar-bg);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  overflow: hidden;
+  transition: background .3s, border-color .3s;
+}
+
+.howCard h3 {
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.howCard p {
+  margin-top: 10px;
+  max-width: 460px;
+  font-size: clamp(15px, 1.8vw, 18px);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.howCard img {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  margin-top: 24px;
+  object-fit: cover;          /* image gets cropped at the bottom, like the iPad card */
+  object-position: top center;
+  border-radius: 16px 16px 0 0;
+}
+
+@media (max-width: 700px) {
+  .howCard { padding: 28px 16px 0; border-radius: 22px; }
 }
 
 .faqItem {
@@ -678,6 +771,85 @@ h1 {
 }
 
 
+/* ---------- End CTA ---------- */
+.EndCTAwrapper {
+  max-width: 760px;
+  margin: 40px auto 60px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.EndCTAtitle {
+  font-size: clamp(28px, 4.5vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 24px;
+}
+
+/* both phrases share one grid cell, so the layout never jumps */
+.swap {
+  display: grid;
+  justify-items: center;
+}
+
+.swapFrom,
+.swapTo {
+  grid-area: 1 / 1;
+  transition:
+    opacity 0.6s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.6s ease;
+}
+
+/* "Start Sharing." waits below, hidden */
+.swapTo {
+  opacity: 0;
+  transform: translateY(0.5em);
+  filter: blur(6px);
+  color: rgb(61, 177, 245);   /* matches your hero's blue "Calend"; delete for plain text */
+}
+
+/* after the swap */
+.swap.done .swapFrom {
+  opacity: 0;
+  transform: translateY(-0.5em);
+  filter: blur(6px);
+}
+
+.swap.done .swapTo {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swapFrom, .swapTo { transition: none; }
+}
+
+.EndCTAbutton {
+  display: inline-block;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  text-decoration: none;
+  font-size: 18px;
+  padding: 16px 32px;
+  border-radius: 999px;
+  transition: filter 0.2s;
+}
+
+.EndCTAbutton:hover {
+  filter: brightness(0.8);
+}
+
+.EndCTAsubtitle {
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 30px;
+}
+
+
 .bottompart {
     display: block;
     width: 100%;
@@ -697,7 +869,7 @@ h1 {
     justify-content: center;
     gap: 12px;
     font-size: 14px;
-    margin-bottom: 20px;
+    
 }
 
 .FooterBar a {

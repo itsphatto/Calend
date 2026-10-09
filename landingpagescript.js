@@ -243,5 +243,62 @@ function animateTitle() {
     }, HOLD + 1700);
 }
 
+
+// How it works: scroll swipes the cards sideways
+const howSteps = document.getElementById("howSteps");
+const howTrack = document.getElementById("howTrack");
+
+if (howSteps && howTrack) {
+  const howSticky = howSteps.querySelector(".howSticky");
+  const howCards = howTrack.querySelectorAll(".howCard");
+  const STICK_TOP = 66;   // must match "top" in .howSticky
+
+  function updateHow() {
+    const total = howSteps.offsetHeight - howSticky.offsetHeight;   // scroll distance while pinned
+    const scrolled = STICK_TOP - howSteps.getBoundingClientRect().top;
+    const p = Math.min(1, Math.max(0, scrolled / total));
+
+    const step = howCards.length > 1 ? howCards[1].offsetLeft - howCards[0].offsetLeft : 0;
+    howTrack.style.transform = `translateX(${(-p * (howCards.length - 1) * step).toFixed(1)}px)`;
+  }
+
+  window.addEventListener("scroll", updateHow, { passive: true });
+  window.addEventListener("resize", updateHow);
+  updateHow();
+}
+
+const ctaSwap = document.getElementById("ctaSwap");
+
+if (ctaSwap) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    // no animation: just show the final phrase
+    ctaSwap.classList.add("done");
+  } else {
+    const SHOW_FROM = 2500;  // how long "Stop Forgetting." stays
+    const SHOW_TO   = 4000;  // how long "Start Sharing." stays
+    let timer = null;
+
+    function scheduleSwap() {
+      const isDone = ctaSwap.classList.contains("done");
+      timer = setTimeout(() => {
+        ctaSwap.classList.toggle("done");
+        scheduleSwap();
+      }, isDone ? SHOW_TO : SHOW_FROM);
+    }
+
+    // only run the loop while the section is on screen
+    const ctaObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        if (timer === null) scheduleSwap();
+      } else {
+        clearTimeout(timer);
+        timer = null;
+      }
+    }, { threshold: 0.6 });
+
+    ctaObserver.observe(ctaSwap);
+  }
+}
+
 animateTitle();
 setInterval(animateTitle, CYCLE);
