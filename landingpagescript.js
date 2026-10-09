@@ -3,6 +3,22 @@ const themeStorageKey = "calend-theme";
 const lightModeButton = document.getElementById("buttonlightmode");
 const darkModeButton = document.getElementById("buttondarkmode");
 
+
+(function () {
+  const bar = document.querySelector(".bar");
+  if (!bar) return;
+  const ENTER = 24, EXIT = 8;   
+  let on = false;
+  function check() {
+    const y = window.scrollY;
+    if (!on && y > ENTER) { on = true; bar.classList.add("scrolled"); }
+    else if (on && y < EXIT) { on = false; bar.classList.remove("scrolled"); }
+  }
+  window.addEventListener("scroll", check, { passive: true });
+  check();
+})();
+
+
 function applyTheme(theme) {
   const nextTheme = theme === "light" ? "light" : "dark";
   root.setAttribute("data-theme", nextTheme);
