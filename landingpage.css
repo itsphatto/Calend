@@ -630,9 +630,10 @@ h1 {
   width: 100%;
   max-width: 1232px;
   margin: 0 auto;
+  margin-bottom: 48px;
   padding: 0 16px;
   font-size: clamp(32px, 5vw, 56px);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.1;
 }
@@ -675,15 +676,19 @@ h1 {
   color: var(--muted);
 }
 
-.howCard img {
-  flex: 1;
+.howCard img{
+  flex: 0 1 auto;
   min-height: 0;
-  width: 100%;
-  margin-top: 24px;
-  object-fit: cover;          /* image gets cropped at the bottom, like the iPad card */
-  object-position: top center;
-  border-radius: 16px 16px 0 0;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  margin: 24px 0;
+  object-fit: contain;
+  border-radius: 16px;
 }
+.howCard img.light{ display: none; }
+[data-theme="light"] .howCard img.dark{ display: none; }
+[data-theme="light"] .howCard img.light{ display: block; }
 
 @media (max-width: 700px) {
   .howCard { padding: 28px 16px 0; border-radius: 22px; }

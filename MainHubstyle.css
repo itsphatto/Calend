@@ -91,23 +91,13 @@
     display: grid;
     grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
     gap: clamp(28px, 5vw, 64px);
-    align-items: start;
+    align-items: center;
+    align-content: center;
   }
-  h1{
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(34px, 5vw, 52px);
-    line-height: 1.08;
-    letter-spacing: -0.02em;
-  }
-  .lede{
-    margin-top: 12px; max-width: 46ch;
-    font-size: 16px; line-height: 1.55; color: var(--ink-soft);
-  }
-
+ 
   /* ---------- Action card ---------- */
   .card{
-    margin-top: 28px;
+    margin-top: 0px;
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 20px;
@@ -155,7 +145,15 @@
   .code.error input{ border-color: var(--danger); animation: shake .32s ease; }
   @keyframes shake{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
 
-  .code-tools{ display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 34px; }
+  .code-tools{ display: flex;
+     justify-content: space-between;
+     align-items: center; gap: 12px;
+     min-height: 34px; }
+
+
+
+
+
   .code-tools .small{ font-size: 13px; color: var(--ink-faint); }
   .link-btn{
     background: none; border: 1px solid var(--line); border-radius: 999px;
@@ -178,6 +176,8 @@
   .terms.show{ display: flex; }
   .terms input{ width: 18px; height: 18px; margin-top: 1px; flex: none; accent-color: var(--accent); cursor: pointer; }
   .terms a{ color: var(--accent); font-weight: 600; }
+  .terms.locked{ opacity: .5; cursor: not-allowed; }
+  .terms.locked input{ cursor: not-allowed; }
 
   .go{
     display: block; width: calc(100% - 52px); margin: 18px 26px 26px;
@@ -265,3 +265,14 @@
   @media (prefers-reduced-motion: reduce){
     *, *::before, *::after{ animation-duration: .001ms !important; transition-duration: .001ms !important; }
   }
+
+  .message:empty{ display: none; }
+  .message{ min-height: 0; margin-top: 5px; }
+
+  .sr-only{ position:absolute;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    white-space:nowrap;
+   }

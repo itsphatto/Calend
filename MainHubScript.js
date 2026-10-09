@@ -221,7 +221,12 @@
   }
 
   // ---------- Terms ----------
-  if(!termsAccepted()) $('termsRow').classList.add('show');
+  $('termsRow').classList.add('show');
+  if(termsAccepted()){
+    $('termsCheck').checked = true;
+    $('termsCheck').disabled = true;
+    $('termsRow').classList.add('locked');
+  }
   function termsOk(){ return termsAccepted() || $('termsCheck').checked; }
   function recordTerms(){ try{ localStorage.setItem(TERMS_KEY, TERMS_VERSION); }catch(e){} }
 
