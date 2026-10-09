@@ -194,6 +194,10 @@ body {
   transform: scale(.9);
 }
 
+.bar.scrolled .innerbar {
+  padding: 0 12px 0 24px
+}
+
 [data-theme="dark"]  #buttondarkmode,
 [data-theme="light"] #buttonlightmode {
   border-color: var(--fg);
