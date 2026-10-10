@@ -16,7 +16,7 @@
   const LAST_KEY = 'noticeboard_last_group';
   const RECENT_KEY = 'noticeboard_recent_groups';
   const TERMS_KEY = 'calend-terms-accepted';
-  const TERMS_VERSION = '2026-10';   // keep in sync with calendarBackEnd.js
+  const TERMS_VERSION = '2026-10';   
 
   let db = null, uid = null, signInPromise = null;
   try{
@@ -26,7 +26,7 @@
     console.error('Firebase init failed', e);
   }
 
-  // ---------- Theme ----------
+  // Theme toggle
   const root = document.documentElement;
   function setTheme(t){
     root.setAttribute('data-theme', t);
@@ -38,7 +38,7 @@
   $('buttondarkmode').addEventListener('click', () => setTheme('dark'));
   setTheme(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
 
-  // ---------- Local storage helpers ----------
+  // Local Storage 
   function getLast(){ try{ return localStorage.getItem(LAST_KEY); }catch(e){ return null; } }
   function loadRecent(){
     try{
@@ -76,7 +76,6 @@
   }
   const goTo = (code) => { location.href = 'calendar.html?group=' + encodeURIComponent(code); };
 
-  // ---------- Your boards (right column) ----------
   function renderBoards(){
     const body = $('boardsBody');
     const recent = loadRecent();
@@ -128,7 +127,6 @@
     }
   }
 
-  // ---------- Code tiles ----------
   function makeCode(container){
     const boxes = [];
     for(let i = 0; i < CODE_LEN; i++){
@@ -184,7 +182,7 @@
   function rollCode(){ createCode.clear(); createCode.fill(randomCode(), 0); createCode.boxes[CODE_LEN - 1].blur(); }
   $('randomBtn').addEventListener('click', () => { clearMessage(); rollCode(); });
 
-  // ---------- Tabs ----------
+  // Tab
   let tab = 'join';
   function setTab(next){
     tab = next;
@@ -201,7 +199,7 @@
   $('tabJoin').addEventListener('click', () => setTab('join'));
   $('tabCreate').addEventListener('click', () => setTab('create'));
 
-  // ---------- Messages ----------
+  //Messages
   const msg = $('message');
   function clearMessage(){
     msg.textContent = '';
@@ -220,7 +218,7 @@
     $('conn').classList.add('show');
   }
 
-  // ---------- Terms ----------
+  //Terms 
   $('termsRow').classList.add('show');
   if(termsAccepted()){
     $('termsCheck').checked = true;
@@ -230,7 +228,7 @@
   function termsOk(){ return termsAccepted() || $('termsCheck').checked; }
   function recordTerms(){ try{ localStorage.setItem(TERMS_KEY, TERMS_VERSION); }catch(e){} }
 
-  // ---------- Database ----------
+  //Database
   function ensureSignedIn(){
     if(!db) return Promise.resolve(null);
     if(signInPromise) return signInPromise;
@@ -250,7 +248,6 @@
     return signInPromise;
   }
 
-  // A board exists if it is registered under boards/ or already has notices (older boards)
   async function boardExists(code){
     const [reg, notes] = await Promise.all([
       db.ref('boards/' + code).once('value').catch(() => null),
@@ -259,7 +256,6 @@
     return !!((reg && reg.exists()) || notes.exists());
   }
 
-  // Atomically claim a new code: 'ok' | 'taken' | 'error'
   async function claimBoard(code){
     try{
       if(await boardExists(code)) return 'taken';
@@ -288,7 +284,7 @@
     if(!db){ showConn("Couldn't connect to the database. Check your connection and reload the page."); return; }
 
     busy(true);
-    const user = await ensureSignedIn();
+    const user = await ensureSignedIn(); 
     if(!user){ busy(false); showConn("Couldn't sign in. Check your connection and reload the page."); return; }
 
     if(tab === 'join'){
@@ -317,9 +313,6 @@
   rollCode();
   const shared = (new URLSearchParams(location.search).get('group') || '').trim();
   if(shared) joinCode.fill(shared, 0); else joinCode.focus();
-  ensureSignedIn();   // warm up sign-in so the first click is fast
-
-  
-  // Back/forward cache: refresh the list and reset the button
+  ensureSignedIn(); 
   window.addEventListener('pageshow', (e) => { if(e.persisted){ renderBoards(); busy(false); } });
 })();
