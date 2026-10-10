@@ -133,7 +133,7 @@
     const boxes = [];
     for(let i = 0; i < CODE_LEN; i++){
       const b = document.createElement('input');
-      b.type = 'text'; b.maxLength = 1; b.placeholder = '·';
+      b.type = 'text'; b.maxLength = 1; b.placeholder = '';
       b.autocomplete = 'off'; b.autocapitalize = 'characters'; b.spellcheck = false;
       b.setAttribute('aria-label', 'Character ' + (i + 1));
       container.appendChild(b);

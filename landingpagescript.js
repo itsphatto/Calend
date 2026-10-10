@@ -93,79 +93,8 @@ window.addEventListener("resize", () => { layout(); update(); });
 layout();
 update();
 
-// Recent Boards Logic
-function loadRecentBoards() {
-  try {
-    const raw = localStorage.getItem('noticeboard_recent_groups');
-    const list = raw ? JSON.parse(raw) : [];
-    return Array.isArray(list) ? list : [];
-  } catch (e) {
-    return [];
-  }
-}
 
-function removeRecentBoard(code) {
-  try {
-    const list = loadRecentBoards().filter(g => g.code !== code);
-    localStorage.setItem('noticeboard_recent_groups', JSON.stringify(list));
-    if (localStorage.getItem('noticeboard_last_group') === code) {
-      localStorage.removeItem('noticeboard_last_group');
-    }
-  } catch (e) {}
-}
-
-const recentBoardsContainer = document.getElementById("recentBoardsContainer");
-const recentBoardsBtn = document.getElementById("recentBoardsBtn");
-const recentBoardsDropdown = document.getElementById("recentBoardsDropdown");
-const recentBoardsList = document.getElementById("recentBoardsList");
-
-const recentBoards = loadRecentBoards();
-
-if (recentBoards && recentBoards.length > 0) {
-  recentBoardsContainer.style.display = "inline-block";
-  
-  recentBoards.forEach(board => {
-    const li = document.createElement("li");
-    
-    const delBtn = document.createElement("button");
-    delBtn.className = "recentDeleteBtn";
-    delBtn.type = "button";
-    delBtn.title = "Remove from recent boards";
-    delBtn.setAttribute("aria-label", `Remove ${board.code}`);
-    delBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
-    
-    delBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      removeRecentBoard(board.code);
-      li.remove();
-      if (recentBoardsList.children.length === 0) {
-        recentBoardsDropdown.classList.remove("show");
-        recentBoardsContainer.style.display = "none";
-      }
-    });
-
-    const a = document.createElement("a");
-    a.href = `calendar.html?group=${board.code}`;
-    a.textContent = board.code;
-    
-    li.appendChild(delBtn);
-    li.appendChild(a);
-    recentBoardsList.appendChild(li);
-  });
-  
-  recentBoardsBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    recentBoardsDropdown.classList.toggle("show");
-  });
-  
-  document.addEventListener("click", (e) => {
-    if (!recentBoardsContainer.contains(e.target)) {
-      recentBoardsDropdown.classList.remove("show");
-    }
-  });
-}
-
-// Image Modal Popup Logic
+// Image Popup Logic
 const revealContainer = document.getElementById("revealContainer");
 const imageModal = document.getElementById("imageModal");
 const imageModalImg = document.getElementById("imageModalImg");
@@ -244,7 +173,7 @@ function animateTitle() {
 }
 
 
-// How it works: scroll swipes the cards sideways
+// How it works: cards snap one at a time, scroll OR swipe moves them
 const howSteps = document.getElementById("howSteps");
 const howTrack = document.getElementById("howTrack");
 
@@ -252,21 +181,63 @@ if (howSteps && howTrack) {
   const howSticky = howSteps.querySelector(".howSticky");
   const howCards = howTrack.querySelectorAll(".howCard");
   const STICK_TOP = 66;   // must match "top" in .howSticky
+  const LAST = howCards.length - 1;
+  let current = -1;
 
-  function updateHow() {
-    const total = howSteps.offsetHeight - howSticky.offsetHeight;   // scroll distance while pinned
-    const scrolled = STICK_TOP - howSteps.getBoundingClientRect().top;
-    const p = Math.min(1, Math.max(0, scrolled / total));
-
-    const step = howCards.length > 1 ? howCards[1].offsetLeft - howCards[0].offsetLeft : 0;
-    howTrack.style.transform = `translateX(${(-p * (howCards.length - 1) * step).toFixed(1)}px)`;
+  function howTotal() {
+    return howSteps.offsetHeight - howSticky.offsetHeight;   // scroll distance while pinned
   }
 
+  function showCard(i) {
+    const step = LAST > 0 ? howCards[1].offsetLeft - howCards[0].offsetLeft : 0;
+    howTrack.style.transform = `translateX(${-i * step}px)`;
+  }
+
+  function updateHow() {
+    const scrolled = STICK_TOP - howSteps.getBoundingClientRect().top;
+    const p = Math.min(1, Math.max(0, scrolled / howTotal()));
+    const idx = Math.round(p * LAST);          // snap to nearest card
+    if (idx !== current) {
+      current = idx;
+      showCard(idx);
+    }
+  }
+
+  // swiping = scroll the page to where that card lives, so scroll stays the one source of truth
+  function goToCard(i) {
+    i = Math.min(LAST, Math.max(0, i));
+    const sectionTop = window.scrollY + howSteps.getBoundingClientRect().top;
+    const target = sectionTop - STICK_TOP + (i / LAST) * howTotal();
+    window.scrollTo({ top: target, behavior: "smooth" });
+  }
+
+  // swipe / drag (touch + mouse + pen)
+  let sx = 0, sy = 0, tracking = false;
+  howTrack.addEventListener("pointerdown", (e) => {
+    sx = e.clientX; sy = e.clientY; tracking = true;
+  });
+  window.addEventListener("pointerup", (e) => {
+    if (!tracking) return;
+    tracking = false;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+      goToCard(current + (dx < 0 ? 1 : -1));
+    }
+  });
+  window.addEventListener("pointercancel", () => { tracking = false; });
+
+  // arrow keys when the section is pinned on screen
+  window.addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const r = howSteps.getBoundingClientRect();
+    if (r.top > STICK_TOP || r.bottom < window.innerHeight) return;
+    goToCard(current + (e.key === "ArrowRight" ? 1 : -1));
+  });
+
   window.addEventListener("scroll", updateHow, { passive: true });
-  window.addEventListener("resize", updateHow);
+  window.addEventListener("resize", () => { current = -1; updateHow(); });
   updateHow();
 }
-
 const ctaSwap = document.getElementById("ctaSwap");
 
 if (ctaSwap) {

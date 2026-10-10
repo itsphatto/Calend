@@ -101,8 +101,8 @@ body {
   transform: translateY(12px);    /* transform = no layout shift */
   border-radius: 20px;
   background: color-mix(in srgb, var(--bar-bg) 82%, transparent);
-  -webkit-backdrop-filter: blur(0.8px) saturate(1.2);
-  backdrop-filter: blur(0.8px) saturate(1.2);
+  -webkit-backdrop-filter: blur(2px) saturate(1.2);
+  backdrop-filter: blur(2px) saturate(1.2);
   border-color: var(--line);
   box-shadow: 0 8px 30px rgba(0, 0, 0, .35);
   pointer-events: auto;
@@ -322,91 +322,22 @@ h1 {
 .getstartedbutton:hover {
   filter: brightness(0.8);
 }
-
-.recentBoardsContainer {
-  position: relative;
+.downloadbutton {
   display: inline-block;
-}
-
-.recentBoardsButton {
   background: var(--tab);
   color: var(--fg);
   border: 1px solid var(--line);
-  font-family: inherit;
-  font-size: 16px;
-  padding: 16px 24px;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 16px 32px;
   border-radius: 999px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
   transition: background 0.2s;
 }
-.recentBoardsButton:hover {
+.downloadbutton:hover {
   background: var(--line);
-}
-.recentBoardsButton span {
-  font-size: 12px;
 }
 
-.recentBoardsDropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  background: var(--bar-bg);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 8px;
-  min-width: 180px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  display: none;
-  flex-direction: column;
-  z-index: 100;
-  text-align: left;
-}
-.recentBoardsDropdown.show {
-  display: flex;
-}
-.recentBoardsDropdown ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.recentBoardsDropdown li {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 4px;
-  border-radius: 6px;
-  transition: background 0.2s;
-}
-.recentBoardsDropdown li:hover {
-  background: var(--line);
-}
-.recentDeleteBtn {
-  background: none;
-  border: none;
-  color: var(--muted);
-  cursor: pointer;
-  padding: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: color 0.2s, background 0.2s;
-}
-.recentDeleteBtn:hover {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.15);
-}
-.recentBoardsDropdown li a {
-  display: block;
-  flex: 1;
-  padding: 8px 10px 8px 4px;
-  color: var(--fg);
-  text-decoration: none;
-  font-weight: 500;
-}
+.heroActions { flex-wrap: wrap; }   /* stack on narrow phones instead of overflowing */
 
 .subtextforstartedbutton {
   font-size: 14px;
@@ -645,7 +576,21 @@ h1 {
   padding-left: calc((100vw - min(100vw, 1232px)) / 2 + 16px);
   padding-right: 16px;
   will-change: transform;
+  transition: transform .55s cubic-bezier(.22, 1, .36, 1);
+  touch-action: pan-y;      /* vertical page scroll still works, horizontal swipe is ours */
+  user-select: none;
+  cursor: grab;
 }
+
+.howCard img { 
+   -webkit-user-drag: none;
+   pointer-events: none;
+   }
+
+@media (prefers-reduced-motion: reduce) {
+  .howTrack { transition: none; }
+}
+
 
 .howCard {
   flex: 0 0 min(900px, 82vw);
