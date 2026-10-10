@@ -309,6 +309,18 @@
 
 
   // ---------- Init ----------
+
+  // Welcome message
+  (function(){
+    let name = '';
+    try{ name = (JSON.parse(localStorage.getItem('noticeboard_profile')) || {}).name || ''; }catch(e){}
+    const returning = loadRecent().length > 0 || !!getLast();
+    if(returning){
+      $('hubTitle').textContent = name ? 'Welcome back, ' + name : 'Welcome back';
+      $('hubSub').textContent = 'Pick up where you left off, or join or create a new board.';
+    }
+  })();
+
   renderBoards();
   rollCode();
   const shared = (new URLSearchParams(location.search).get('group') || '').trim();
