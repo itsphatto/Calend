@@ -31,6 +31,7 @@
   --bar-getstartedbutton-bg:#1486ff;
   --section-bg: #f5f5f7;   
   --card-bg: #ffffff; 
+  --download-btn-bg: #1e90ff;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,6 +44,7 @@
     --accent-color: #5eafff;
     --bar-bg :#000000;
     --bar-getstartedbutton-bg:#1486ff;
+    --download-btn-bg: #4169e1;
 }
 
 body {
@@ -70,7 +72,7 @@ body {
 .innerbar {
   max-width: 1232px;
   margin: 0 auto;
-  height: 60px;
+  height: 67px; /* SIX SEVENNNNNNNNNN*/ 
   padding: 0 16px;
   display: flex;
   align-items: center;
@@ -167,7 +169,7 @@ body {
     visibility .3s;
 }
 
-.bargetstarted {
+.bardownloadbtn {
   opacity: 0;
   visibility: hidden;   /* keeps it out of tab order and clicks while hidden */
   transform: scale(.9);
@@ -182,11 +184,11 @@ body {
   
   
 }
-.bargetstarted:hover { 
+.bardownloadbtn:hover { 
   filter: brightness(.8);
  }
 
-.bar.scrolled .bargetstarted {
+.bar.scrolled .bardownloadbtn {
   opacity: 1;
   visibility: visible;
   transform: none;
@@ -324,8 +326,8 @@ h1 {
 }
 .downloadbutton {
   display: inline-block;
-  background: var(--tab);
-  color: var(--fg);
+  background: var(--download-btn-bg);
+  color: whitesmoke;
   border: 1px solid var(--line);
   text-decoration: none;
   font-size: 18px;
@@ -594,15 +596,15 @@ h1 {
 
 .howCard {
   flex: 0 0 min(900px, 82vw);
-  height: min(560px, calc(100vh - 66px - 160px));
+  height: min(570px, calc(100vh - 66px - 160px));
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 36px 24px 0;
+  padding: 30px 24px 0;
   background: var(--bar-bg);
   border: 1px solid var(--line);
-  border-radius: 28px;
+  border-radius: 18px;
   overflow: hidden;
   transition: background .3s, border-color .3s;
 }
