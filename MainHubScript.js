@@ -310,12 +310,16 @@
     goTo(code);
   });
 
+
+
   // ---------- Init ----------
   renderBoards();
   rollCode();
-  joinCode.focus();
+  const shared = (new URLSearchParams(location.search).get('group') || '').trim();
+  if(shared) joinCode.fill(shared, 0); else joinCode.focus();
   ensureSignedIn();   // warm up sign-in so the first click is fast
 
+  
   // Back/forward cache: refresh the list and reset the button
   window.addEventListener('pageshow', (e) => { if(e.persisted){ renderBoards(); busy(false); } });
 })();

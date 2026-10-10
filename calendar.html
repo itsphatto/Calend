@@ -120,89 +120,7 @@
   </div>
 </div>
 
-<!-- -->
-<div class="modal gate-modal" id="groupModal" data-tab="join">
-  <div class="gate-head">
-    <h3>Private board</h3>
-    <a class="gate-close" href="index.html?home" aria-label="Leave and go home" title="Leave">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-    </a>
-  </div>
-  <p class="sub">Boards are private to whoever has the code — think of it like an unlisted link. Anyone with the code can see and pin notices.</p>
 
-  <div class="gate-tabs" role="tablist">
-    <button type="button" class="gate-tab active" data-tab="join" role="tab" aria-selected="true">Join</button>
-    <button type="button" class="gate-tab" data-tab="create" role="tab" aria-selected="false">Create</button>
-  </div>
-
-  <div class="gate-body">
-    <div id="groupContinueRow" style="display:none;">
-      <button type="button" class="gate-resume" id="continueGroupBtn">
-        <span class="gate-resume-label">Last board</span>
-        <strong id="continueGroupCode"></strong>
-        <span class="gate-resume-go">→</span>
-      </button>
-    </div>
-
-    <div class="gate-pane" data-pane="join">
-      <div class="field">
-        <label for="joinGroupInput">Board code</label>
-        <input type="text" id="joinGroupInput" maxlength="10" placeholder="K7P2XQAF" autocomplete="off" spellcheck="false">
-      </div>
-      <p class="gate-hint">Enter the code of a board that already exists. Unknown codes are rejected.</p>
-    </div>
-
-    <div class="gate-pane" data-pane="create">
-      <div class="code-boxes" id="codeBoxes"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 1"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 2"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 3"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 4"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 5"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 6"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 7"><input type="text" class="code-box" maxlength="1" placeholder="·" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Character 8"></div>
-      <div class="gate-create-row">
-        <p class="gate-hint">Type your own 8-character code. Codes already in use are rejected.</p>
-        <button type="button" class="gate-random" id="randomCodeBtn">Randomize</button>
-      </div>
-    </div>
-
-    <p class="gate-error" id="gateError" role="alert"></p>
-  </div>
-
-  <div class="gate-foot">
-    <a class="gate-leave" href="index.html?home">Leave</a>
-    <button type="button" class="btn-primary" id="joinGroupBtn">Join board</button>
-    <button type="button" class="btn-primary" id="createGroupBtn">Create board</button>
-  </div>
-</div>
-
-<!--tos and privacy gate -->
-<div class="modal gate-modal terms-modal" id="termsModal">
-  <div class="gate-head">
-    <h3>Before you continue</h3>
-    <a class="gate-close" href="index.html" aria-label="Leave and go home" title="Leave">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-    </a>
-  </div>
-  <p class="sub">Please read and accept both documents to use Calend.</p>
-
-  <div class="gate-tabs" role="tablist">
-    <button type="button" class="gate-tab active" data-doc="privacy" role="tab" aria-selected="true">Privacy Policy</button>
-    <button type="button" class="gate-tab" data-doc="terms" role="tab" aria-selected="false">Terms of Service</button>
-  </div>
-
-  <div class="terms-doc" id="termsDoc">Loading…</div>
-
-  <div class="terms-checks">
-    <label class="terms-check">
-      <input type="checkbox" id="agreePrivacy">
-      <span>I have read and accept the <a href="Privacy.html" target="_blank" rel="noopener">Privacy Policy</a></span>
-    </label>
-    <label class="terms-check">
-      <input type="checkbox" id="agreeTerms">
-      <span>I have read and accept the <a href="Termofservice.html" target="_blank" rel="noopener">Terms of Service</a></span>
-    </label>
-  </div>
-
-  <div class="gate-foot">
-    <a class="gate-leave" href="index.html">Cancel</a>
-    <button type="button" class="btn-primary" id="termsAcceptBtn" disabled>Accept &amp; continue</button>
-  </div>
-</div>
 
 <div class="modal gate-modal" id="deleteModal">
   <div class="gate-head"><h3>Delete this board?</h3></div>
@@ -218,6 +136,7 @@
     <button type="button" class="btn-primary danger-btn" id="deleteConfirmBtn" disabled>Delete board</button>
   </div>
 </div>
+
 
 <div class="toast" id="toast"></div>
 

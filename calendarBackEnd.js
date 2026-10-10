@@ -38,7 +38,6 @@
   const overlay = $("overlay");
   const panel = $("dayPanel");
   const profileModal = $("profileModal");
-  const groupModal = $("groupModal");
   const toastEl = $("toast");
   const connBanner = $("connBanner");
 
@@ -74,13 +73,9 @@
     if(bar) bar.inert = on;
   }
 
-  // True while a modal that must not be dismissed is on screen
-  function gateIsOpen(){
-    return groupModal.classList.contains('show')
-      || (profileModal.classList.contains('show') && profileModal.dataset.forced === '1')
-      || $("termsModal").classList.contains('show');
-  }
-
+function gateIsOpen(){
+  return profileModal.classList.contains('show') && profileModal.dataset.forced === '1';
+}
 
   let db = null;
   let firebaseReady = false;
@@ -135,14 +130,9 @@
   }
 
 
-  const GROUP_CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 
-  function generateGroupCode(len){
-    len = len || 8;
-    let out = '';
-    for(let i=0;i<len;i++) out += GROUP_CODE_CHARS[Math.floor(Math.random()*GROUP_CODE_CHARS.length)];
-    return out;
-  }
+
+
 
   function getGroupFromURL(){
     const params = new URLSearchParams(location.search);
@@ -156,11 +146,7 @@
     history.replaceState({}, '', url.toString());
   }
 
-  function clearGroupInURL(){
-    const url = new URL(location.href);
-    url.searchParams.delete('group');
-    history.replaceState({}, '', url.toString());
-  }
+
 
   function saveLastGroup(code){
     try{ localStorage.setItem('noticeboard_last_group', code); }catch(e){}
@@ -206,205 +192,6 @@
     $("boardCode").textContent = state.groupId || '—';
   }
 
-  const BOARD_CODE_LEN = 8;
-  const codeBoxes = Array.from(document.querySelectorAll('#codeBoxes .code-box'));
-
-  function setGateError(msg){
-    const el = $("gateError");
-    el.textContent = msg || '';
-    el.classList.toggle('show', !!msg);
-    codeBoxes.forEach(b => b.classList.remove('has-error'));
-    $("joinGroupInput").classList.remove('has-error');
-    if(msg){
-      const targets = groupModal.dataset.tab === 'create' ? codeBoxes : [$("joinGroupInput")];
-      targets.forEach(t => { t.classList.remove('has-error'); void t.offsetWidth; t.classList.add('has-error'); });
-    }
-  }
-
-  function setGateBusy(busy){
-    const joinBtn = $("joinGroupBtn"), createBtn = $("createGroupBtn");
-    joinBtn.disabled = busy;
-    createBtn.disabled = busy;
-    joinBtn.textContent = busy ? 'Checking…' : 'Join board';
-    createBtn.textContent = busy ? 'Checking…' : 'Create board';
-  }
-
-  function readCreateCode(){ return codeBoxes.map(b => b.value).join('').toUpperCase(); }
-
-  function fillCreateCode(str, startAt){
-    const chars = str.toUpperCase().replace(/[^A-Z0-9]/g, '').split('');
-    let i = startAt || 0;
-    chars.forEach(ch => { if(i < codeBoxes.length) codeBoxes[i++].value = ch; });
-    codeBoxes[Math.min(i, codeBoxes.length - 1)].focus();
-  }
-
-  codeBoxes.forEach((box, i) => {
-    box.addEventListener('input', () => {
-      setGateError('');
-      const clean = box.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-      box.value = clean.slice(-1);
-      if(box.value && i < codeBoxes.length - 1) codeBoxes[i + 1].focus();
-    });
-    box.addEventListener('keydown', (e) => {
-      if(e.key === 'Backspace' && !box.value && i > 0){ codeBoxes[i - 1].value = ''; codeBoxes[i - 1].focus(); e.preventDefault(); }
-      else if(e.key === 'ArrowLeft' && i > 0){ codeBoxes[i - 1].focus(); e.preventDefault(); }
-      else if(e.key === 'ArrowRight' && i < codeBoxes.length - 1){ codeBoxes[i + 1].focus(); e.preventDefault(); }
-      else if(e.key === 'Enter'){ $("createGroupBtn").click(); }
-    });
-    box.addEventListener('paste', (e) => {
-      e.preventDefault();
-      setGateError('');
-      fillCreateCode((e.clipboardData || window.clipboardData).getData('text'), i);
-    });
-    box.addEventListener('focus', () => box.select());
-  });
-
-  $("randomCodeBtn").addEventListener('click', () => {
-    setGateError('');
-    codeBoxes.forEach(b => b.value = '');
-    fillCreateCode(generateGroupCode(BOARD_CODE_LEN), 0);
-  });
-  $("joinGroupInput").addEventListener('input', () => setGateError(''));
-
-  // A board exists if it is registered under boards/ or already has notices (older boards)
-  async function boardExists(code){
-    const [reg, notes] = await Promise.all([
-      db.ref(`boards/${code}`).once('value').catch(() => null),
-      db.ref(`notices/${code}`).limitToFirst(1).once('value')
-    ]);
-    return !!((reg && reg.exists()) || notes.exists());
-  }
-
-  // Atomically claim a new code: 'ok' | 'taken' | 'error'
-  async function claimBoard(code){
-    try{
-      if(await boardExists(code)) return 'taken';
-      const res = await db.ref(`boards/${code}`).transaction(cur => (cur === null ? { createdAt: Date.now(), creatorUid: state.uid } : undefined));
-      return res.committed ? 'ok' : 'taken';
-    }catch(e){
-      console.error('Could not create board', e);
-      return 'error';
-    }
-  }
-
-  // Only the board's creator (matched by anonymous uid) sees the delete button.
-  // Boards created before this feature have no creatorUid, so nobody can delete
-  // them from the UI (remove those from the Firebase console).
-  function renderDeleteButton(){
-    const btn = $("deleteBoardBtn");
-    if(!btn) return;
-    const mine = !!(state.uid && state.boardCreator && state.boardCreator === state.uid);
-    btn.style.display = mine ? 'flex' : 'none';
-  }
-
-  async function loadBoardMeta(){
-    state.boardCreator = null;
-    if(firebaseReady && state.groupId){
-      try{
-        const snap = await db.ref(`boards/${state.groupId}/creatorUid`).once('value');
-        state.boardCreator = snap.val() || null;
-      }catch(e){
-        console.error('Could not load board info', e);
-      }
-    }
-    renderDeleteButton();
-  }
-
-  function setGateTab(tab){
-    groupModal.dataset.tab = tab;
-    groupModal.querySelectorAll('.gate-tab').forEach(t => {
-      const on = t.dataset.tab === tab;
-      t.classList.toggle('active', on);
-      t.setAttribute('aria-selected', String(on));
-    });
-    setGateError('');
-    if(tab === 'join') $("joinGroupInput").focus();
-    else codeBoxes[0].focus();
-  }
-  groupModal.querySelectorAll('.gate-tab').forEach(t => t.addEventListener('click', () => setGateTab(t.dataset.tab)));
-  $("joinGroupInput").addEventListener('keydown', (e) => { if(e.key === 'Enter') $("joinGroupBtn").click(); });
-
-  function openGroupGate(onResolved){
-    const last = getLastGroup();
-    if(last && last !== state.groupId){
-      $("continueGroupCode").textContent = last;
-      $("groupContinueRow").style.display = 'block';
-    }else{
-      $("groupContinueRow").style.display = 'none';
-    }
-    $("joinGroupInput").value = '';
-    codeBoxes.forEach(b => b.value = '');
-    setGateBusy(false);
-    groupModal.classList.add('show');
-    setGateTab('join');
-    overlay.classList.add('show');
-    groupModal.dataset.forced = '1';
-    $("app").classList.add('app-locked');
-    setBackgroundInert(true);
-    document.body.style.overflow = 'hidden';
-
-    const finish = (code) => {
-      if(!code) return;
-      state.groupId = code;
-      setGroupInURL(code);
-      saveLastGroup(code);
-      addRecentGroup(code);
-      renderBoardBar();
-      groupModal.classList.remove('show');
-      groupModal.dataset.forced = '0';
-      $("app").classList.remove('app-locked');
-      setBackgroundInert(false);
-      document.body.style.overflow = '';
-      if(!panel.classList.contains('open') && !profileModal.classList.contains('show')){
-        overlay.classList.remove('show');
-      }
-      onResolved();
-    };
-
-    $("continueGroupBtn").onclick = () => finish(last);
-    $("createGroupBtn").onclick = async () => {
-      const code = readCreateCode();
-      if(code.length < BOARD_CODE_LEN){ setGateError(`Fill in all ${BOARD_CODE_LEN} characters.`); return; }
-      setGateBusy(true);
-      const result = await claimBoard(code);
-      setGateBusy(false);
-      if(result === 'taken'){ setGateError(`${code} is already taken. Try a different code.`); return; }
-      if(result === 'error'){ setGateError("Couldn't create the board. Check your connection or database rules."); return; }
-      finish(code);
-    };
-    $("joinGroupBtn").onclick = async () => {
-      const val = $("joinGroupInput").value.trim().toUpperCase();
-      if(!val){ setGateError('Enter a board code first.'); return; }
-      setGateBusy(true);
-      let found;
-      try{ found = await boardExists(val); }
-      catch(e){ console.error('Board lookup failed', e); setGateBusy(false); setGateError("Couldn't reach the database. Try again."); return; }
-      setGateBusy(false);
-      if(!found){ setGateError(`No board found with code ${val}.`); return; }
-      finish(val);
-    };
-  }
-
-  async function resolveGroup(){
-    const fromURL = getGroupFromURL();
-    if(fromURL){
-      let found = true;
-      try{ found = await boardExists(fromURL); }catch(e){ console.error('Board lookup failed', e); }
-      if(!found){
-        clearGroupInURL();
-        return new Promise((resolve) => {
-          openGroupGate(resolve);
-          setGateError(`No board found with code ${fromURL}.`);
-        });
-      }
-      state.groupId = fromURL;
-      saveLastGroup(fromURL);
-      addRecentGroup(fromURL);
-      renderBoardBar();
-      return Promise.resolve();
-    }
-    return new Promise((resolve) => openGroupGate(resolve));
-  }
 
   function loadProfileLocal(){
     try{
@@ -506,7 +293,7 @@
     profileModal.classList.remove('show');
     profileModal.dataset.forced = '0';
     setBackgroundInert(false);
-    if(!panel.classList.contains('open') && !groupModal.classList.contains('show')) overlay.classList.remove('show');
+    if(!panel.classList.contains('open')) overlay.classList.remove('show');
   }
 
   $("nameInput").addEventListener('input', updateProfilePreview);
@@ -1211,6 +998,53 @@
     }
   });
 
+  async function boardExists(code){
+    const [reg, notes] = await Promise.all([
+      db.ref(`boards/${code}`).once('value').catch(() => null),
+      db.ref(`notices/${code}`).limitToFirst(1).once('value')
+    ]);
+    return !!((reg && reg.exists()) || notes.exists());
+  }
+
+  function renderDeleteButton(){
+    const btn = $("deleteBoardBtn");
+    if(!btn) return;
+    const mine = !!(state.uid && state.boardCreator && state.boardCreator === state.uid);
+    btn.style.display = mine ? 'flex' : 'none';
+  }
+
+  async function loadBoardMeta(){
+    state.boardCreator = null;
+    if(firebaseReady && state.groupId){
+      try{
+        const snap = await db.ref(`boards/${state.groupId}/creatorUid`).once('value');
+        state.boardCreator = snap.val() || null;
+      }catch(e){
+        console.error('Could not load board info', e);
+      }
+    }
+    renderDeleteButton();
+  }
+
+  function goToHub(code){
+  location.replace('MainHub.html' + (code ? '?group=' + encodeURIComponent(code) : ''));
+}
+
+// returns true if we can stay on this page, false if we're leaving
+async function resolveGroup(){
+  const code = getGroupFromURL();
+  if(!code || !/^[A-Z0-9]{8,10}$/.test(code)){ goToHub(); return false; }
+
+  let found = true;   // on network error, stay and let the banner explain
+  try{ found = await boardExists(code); }catch(e){ console.error('Board lookup failed', e); }
+  if(!found){ removeRecentGroup(code); goToHub(); return false; }
+
+  state.groupId = code;
+  saveLastGroup(code);
+  addRecentGroup(code);
+  renderBoardBar();
+  return true;
+}
 
   const lightBtn = $("buttonlightmode");
   const darkBtn = $("buttondarkmode");
@@ -1330,79 +1164,26 @@
     try{ return localStorage.getItem(TERMS_KEY) === TERMS_VERSION; }catch(e){ return false; }
   }
 
-  function openTermsGate(){
-    return new Promise((resolve) => {
-      const modal = $("termsModal"), doc = $("termsDoc");
-      const boxA = $("agreePrivacy"), boxB = $("agreeTerms"), btn = $("termsAcceptBtn");
-      const pages = { privacy: 'Privacy.html', terms: 'Termofservice.html' };
-      const cache = {};
-      let current = 'privacy';
 
-      async function showDoc(key){
-        current = key;
-        modal.querySelectorAll('.gate-tab').forEach(t => {
-          const on = t.dataset.doc === key;
-          t.classList.toggle('active', on);
-          t.setAttribute('aria-selected', String(on));
-        });
-        if(cache[key]){ doc.innerHTML = cache[key]; doc.scrollTop = 0; return; }
-        doc.textContent = 'Loading…';
-        try{
-          const res = await fetch(pages[key]);
-          const html = await res.text();
-          const main = new DOMParser().parseFromString(html, 'text/html').querySelector('main');
-          cache[key] = main ? main.innerHTML : '';
-          if(current !== key) return;   // user switched tabs while loading
-          doc.innerHTML = cache[key] || `<a href="${pages[key]}" target="_blank" rel="noopener">Open the document</a>`;
-          doc.scrollTop = 0;
-        }catch(e){
-          if(current === key) doc.innerHTML = `Couldn't load it here. <a href="${pages[key]}" target="_blank" rel="noopener">Open it in a new tab</a>.`;
-        }
-      }
-
-      modal.querySelectorAll('.gate-tab').forEach(t => t.addEventListener('click', () => showDoc(t.dataset.doc)));
-      const sync = () => { btn.disabled = !(boxA.checked && boxB.checked); };
-      boxA.addEventListener('change', sync);
-      boxB.addEventListener('change', sync);
-
-      btn.addEventListener('click', () => {
-        if(btn.disabled) return;
-        try{ localStorage.setItem(TERMS_KEY, TERMS_VERSION); }catch(e){}
-        modal.classList.remove('show');
-        modal.dataset.forced = '0';
-        overlay.classList.remove('show');
-        $("app").classList.remove('app-locked');
-        setBackgroundInert(false);
-        document.body.style.overflow = '';
-        resolve();
-      });
-
-      modal.dataset.forced = '1';
-      modal.classList.add('show');
-      overlay.classList.add('show');
-      $("app").classList.add('app-locked');
-      setBackgroundInert(true);
-      document.body.style.overflow = 'hidden';
-      showDoc('privacy');
-    });
-  }
 
   (async function init(){
     initTheme();
+    if(firebaseReady && !termsAccepted()){ goToHub(getGroupFromURL()); return; }
     showConnBanner();
     populateSelects();
     syncSelects();
-    if(!termsAccepted()) await openTermsGate();
     if(firebaseReady){
-      await ensureSignedIn();   // must happen before any database read or write
-      await resolveGroup();
+      await ensureSignedIn();
+      if(!(await resolveGroup())) return;
       await loadBoardMeta();
     }else{
       $("boardCodeWrap").style.display = 'none';
     }
     await loadProfile();
     await renderMonth();
-    // entrance animation plays once on load, never again on re-renders
     setTimeout(() => document.body.classList.add('anim-done'), 1200);
   })();
+
+
+
 })();
