@@ -1,0 +1,24 @@
+{
+  "name": "calend",
+  "version": "1.0.0",
+  "description": "A SaaS shared calendar app for team and individual use.",
+  "author": "itsphatto",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.itsphatto.calend",
+    "productName": "Calend",
+    "files": [
+      "main.js",
+      "Website/**/*",
+      "Software/**/*",
+      "assets/**/*"
+    ],
+    "win": { "target": "nsis" },
+    "mac": { "target": "dmg", "category": "public.app-category.productivity" },
+    "linux": { "target": "AppImage" }
+  }
+}
