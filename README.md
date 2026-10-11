@@ -9,9 +9,7 @@ Calend is a free, open-source shared calendar for small groups. No accounts. No 
 3. Pick a name and color
 4. Pin notes to days
 5. Share the code with your group
-
-That's it. No sign-up. No password. Just open it and go.
-
+   
 ---
 
 ## Features
@@ -75,7 +73,7 @@ Calend/
 
 ##  Privacy & Security
 
-We don't collect data. We don't track you. We don't sell anything.
+We (itsphatto only not really "We") don't collect data. We don't track you. We don't sell anything.
 
 - Your notes live in Firebase
 - Your browser stores your theme, profile, and recent boards
