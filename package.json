@@ -11,6 +11,7 @@
   "build": {
     "appId": "com.itsphatto.calend",
     "productName": "Calend",
+    "icon": "assets/CalendLogo.png",
     "files": [
       "main.js",
       "Website/**/*",

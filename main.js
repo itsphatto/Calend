@@ -25,6 +25,9 @@ const TYPES = {
   '.woff2': 'font/woff2'
 };
 
+// Serve the repo over http so absolute paths like /Website/x.css and
+// /assets/x.png work unchanged. Firebase Auth also refuses file:// and
+// custom schemes, but accepts http://localhost.
 function startServer() {
   return new Promise((resolve, reject) => {
     const server = http.createServer((req, res) => {
@@ -56,8 +59,9 @@ function openExternalSafe(url) {
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 1280,
-    height: 800,
+    width: 1380,
+    height: 900,
+    icon: path.join(__dirname, 'assets', 'CalendLogo.png'),
     minWidth: 380,
     minHeight: 600,
     backgroundColor: '#000000',
@@ -66,6 +70,9 @@ function createWindow() {
   });
 
   win.loadURL(ORIGIN + START_PAGE);
+
+  // Links to our own pages (Privacy, Terms) open in-app; everything else
+  // (GitHub, mailto) goes to the system browser / mail client.
   win.webContents.setWindowOpenHandler(({ url }) => {
     if (url.startsWith(ORIGIN)) return { action: 'allow' };
     openExternalSafe(url);
@@ -79,7 +86,7 @@ function createWindow() {
 }
 
 if (!app.requestSingleInstanceLock()) {
-  app.quit();
+  app.quit(); // second instance can't bind the port anyway
 } else {
   app.on('second-instance', () => {
     if (win) { if (win.isMinimized()) win.restore(); win.focus(); }
