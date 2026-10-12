@@ -1158,7 +1158,7 @@ async function resolveGroup(){
 
   // ---------- Terms / Privacy gate ----------
   const TERMS_KEY = 'calend-terms-accepted';
-  const TERMS_VERSION = '2026-10';   // bump this when you change the policies → everyone sees the gate again
+  const TERMS_VERSION = '2026-10-12';   // bump this when you change the policies → everyone sees the gate again
 
   function termsAccepted(){
     try{ return localStorage.getItem(TERMS_KEY) === TERMS_VERSION; }catch(e){ return false; }

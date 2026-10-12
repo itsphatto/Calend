@@ -16,7 +16,7 @@
   const LAST_KEY = 'noticeboard_last_group';
   const RECENT_KEY = 'noticeboard_recent_groups';
   const TERMS_KEY = 'calend-terms-accepted';
-  const TERMS_VERSION = '2026-10';   
+  const TERMS_VERSION = '2026-10-12';   
 
   let db = null, uid = null, signInPromise = null;
   try{
