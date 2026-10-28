@@ -19,6 +19,59 @@ const darkModeButton = document.getElementById("buttondarkmode");
 })();
 
 
+// Momentum scrolling: mouse wheel glides to a stop instead of stopping instantly
+// (touch already has native momentum, so only the wheel is taken over)
+(function () {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const EASE = 0.09;   // lower = longer glide, higher = snappier
+  let target = window.scrollY, current = target, lastSet = target;
+  let running = false, lastTime = 0;
+
+  const maxScroll = () => document.documentElement.scrollHeight - window.innerHeight;
+
+  // let elements with their own scrollbar scroll natively
+  function insideScrollable(el) {
+    for (; el && el !== document.body && el !== document.documentElement; el = el.parentElement) {
+      const oy = getComputedStyle(el).overflowY;
+      if ((oy === "auto" || oy === "scroll") && el.scrollHeight > el.clientHeight) return true;
+    }
+    return false;
+  }
+
+  function frame(now) {
+    const dt = Math.min(64, now - lastTime);
+    lastTime = now;
+    current += (target - current) * (1 - Math.pow(1 - EASE, dt / 16.67));
+    if (Math.abs(target - current) < 0.5) current = target;
+    lastSet = Math.round(current);
+    window.scrollTo({ top: current, behavior: "instant" });
+    if (current !== target) requestAnimationFrame(frame);
+    else running = false;
+  }
+
+  window.addEventListener("wheel", (e) => {
+    if (e.ctrlKey || document.body.style.overflow === "hidden") return;   // zoom / modal open
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || insideScrollable(e.target)) return;
+    e.preventDefault();
+    const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1;
+    if (!running) target = current = window.scrollY;
+    target = Math.min(maxScroll(), Math.max(0, target + e.deltaY * unit));
+    if (!running) {
+      running = true;
+      lastTime = performance.now();
+      requestAnimationFrame(frame);
+    }
+  }, { passive: false });
+
+  // keyboard, scrollbar drag or scrollTo() moved the page: stop gliding and follow it
+  window.addEventListener("scroll", () => {
+    if (Math.abs(window.scrollY - lastSet) > 2) {
+      target = current = lastSet = window.scrollY;
+    }
+  }, { passive: true });
+})();
+
+
 function applyTheme(theme) {
   const nextTheme = theme === "light" ? "light" : "dark";
   root.setAttribute("data-theme", nextTheme);
